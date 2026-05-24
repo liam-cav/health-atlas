@@ -530,7 +530,7 @@ body::before{
   <div>
     <div class="hdr-eyebrow">Personal health atlas · Liam · Manly, Sydney</div>
     <h1 class="hdr-title">A body in <em>data.</em></h1>
-    <div class="hdr-sub">449 days · 7 body scans · 15 months tracked · Mar 2025 → May 2026</div>
+    <div class="hdr-sub">449 days · 6 body scans · 15 months tracked · Mar 2025 → May 2026</div>
   </div>
   <div class="hdr-pills">
     <div class="hdr-pill"><span class="pk">RHR</span><span class="pv pv-coral">66.7 bpm</span></div>
@@ -608,7 +608,7 @@ body::before{
   <div class="g2">
     <div class="card accent-teal">
       <div class="card-label">Autonomic Balance Index · HRV ÷ RHR × 100</div>
-      <div class="card-sub" style="font-family:'DM Mono',monospace;font-size:9px;color:var(--muted);margin-bottom:12px;">Higher = better autonomic regulation · Best: 87.2 (Jun 2025) · Current: 60.7</div>
+      <div class="card-sub" style="font-family:'DM Mono',monospace;font-size:9px;color:var(--muted);margin-bottom:12px;">Higher = better autonomic regulation · Best: 87.2 (Jun 2025) · Current: 63.4</div>
       <div class="cwrap h-md"><canvas id="abiChart"></canvas></div>
     </div>
     <div class="card accent-plum">
@@ -1024,6 +1024,35 @@ const sessions = [
   {d:'May 23',type:'Circuit',dur:5,hr:134,z3:2.0,z2:0.7,hrr:null,tod:11.3},
 ];
 
+// Scan series — 6 scans (S6 = 21 May 2026, morning, flagged for hydration + height discrepancy)
+const scans = [
+  {s:'S1',date:'12 Apr',weight:88.4,bf:11.5,tbw:56.3,muscle:43.8,fat:10.2,vfa:50,whr:0.78,bio:31,bwi:8.7},
+  {s:'S2',date:'27 Apr',weight:89.2,bf:7.8,tbw:59.1,muscle:46.1,fat:7.0,vfa:37,whr:0.72,bio:30,bwi:9.0},
+  {s:'S3',date:'3 May',weight:88.5,bf:6.8,tbw:59.4,muscle:46.4,fat:6.0,vfa:34,whr:0.71,bio:30,bwi:9.0},
+  {s:'S4',date:'8 May',weight:88.5,bf:12.2,tbw:56.0,muscle:43.6,fat:10.8,vfa:55,whr:0.80,bio:31,bwi:8.7},
+  {s:'S5',date:'15 May',weight:88.8,bf:11.4,tbw:56.7,muscle:44.1,fat:10.1,vfa:49,whr:0.77,bio:31,bwi:8.7},
+  {s:'S6',date:'21 May',weight:88.4,bf:13.2,tbw:55.2,muscle:42.9,fat:11.7,vfa:59,whr:0.81,bio:32,bwi:8.7,flagged:true},
+];
+
+// Life Cycle monthly (corrected: Work→Office, Manly Wharf Drinks→Commute)
+const lcMonthly = [
+  {m:'2025-03',office:131.5,yoga:33.2,gym:26.9,surf:0.5,cycle:0.0,social:8.7,rhr:55.5,hrv:43.8,hrr:41.9,vo2:52.3},
+  {m:'2025-04',office:94.7,yoga:60.8,gym:22.1,surf:1.6,cycle:0.3,social:0.0,rhr:54.3,hrv:42.7,hrr:40.1,vo2:51.5},
+  {m:'2025-05',office:52.3,yoga:21.1,gym:16.0,surf:0.0,cycle:0.2,social:0.0,rhr:56.6,hrv:43.5,hrr:40.8,vo2:50.5},
+  {m:'2025-06',office:124.7,yoga:15.8,gym:21.5,surf:0.0,cycle:4.3,social:3.0,rhr:53.7,hrv:46.8,hrr:42.7,vo2:50.0},
+  {m:'2025-07',office:118.7,yoga:11.7,gym:34.1,surf:0.0,cycle:4.3,social:0.0,rhr:54.5,hrv:44.9,hrr:37.7,vo2:49.1},
+  {m:'2025-08',office:139.0,yoga:0.0,gym:37.6,surf:0.0,cycle:4.7,social:0.0,rhr:56.3,hrv:47.0,hrr:29.4,vo2:47.1},
+  {m:'2025-09',office:131.9,yoga:4.0,gym:23.0,surf:0.0,cycle:2.3,social:0.0,rhr:61.1,hrv:38.5,hrr:33.0,vo2:48.0},
+  {m:'2025-10',office:138.3,yoga:0.0,gym:27.3,surf:0.0,cycle:1.2,social:0.0,rhr:62.8,hrv:37.8,hrr:38.8,vo2:48.4},
+  {m:'2025-11',office:132.9,yoga:0.0,gym:21.4,surf:0.0,cycle:0.2,social:1.9,rhr:63.5,hrv:38.5,hrr:37.0,vo2:48.9},
+  {m:'2025-12',office:79.8,yoga:0.9,gym:27.3,surf:7.5,cycle:0.1,social:0.0,rhr:62.5,hrv:37.3,hrr:36.3,vo2:46.9},
+  {m:'2026-01',office:93.4,yoga:0.4,gym:23.6,surf:2.4,cycle:0.2,social:0.3,rhr:62.6,hrv:36.2,hrr:36.9,vo2:47.3},
+  {m:'2026-02',office:95.5,yoga:0.4,gym:17.5,surf:0.0,cycle:0.2,social:0.0,rhr:64.6,hrv:35.4,hrr:40.2,vo2:47.5},
+  {m:'2026-03',office:116.0,yoga:0.0,gym:27.0,surf:2.4,cycle:0.3,social:0.0,rhr:66.2,hrv:40.1,hrr:32.5,vo2:46.4},
+  {m:'2026-04',office:109.3,yoga:0.0,gym:29.6,surf:3.6,cycle:1.1,social:0.0,rhr:64.7,hrv:39.0,hrr:29.1,vo2:45.3},
+  {m:'2026-05',office:85.1,yoga:0.0,gym:27.8,surf:1.4,cycle:4.2,social:4.8,rhr:66.7,hrv:42.3,hrr:32.4,vo2:42.9},
+];
+
 // Recovery plan targets (linear interpolation, W0=Apr 27 2026 baseline)
 const planTargets = [
   {w:0,rhr:64.7,hrv:39.0,hrr:29.1,vo2:45.3},
@@ -1044,34 +1073,6 @@ const planTargets = [
 
 const currentWeek = 4; // Week 4 of 13 — plan started Apr 27, today May 23
 
-const scans = [
-  {s:'S1',date:'12 Apr',weight:88.4,bf:11.5,tbw:56.3,muscle:43.8,fat:10.2,vfa:50,whr:0.78,bio:31,bwi:8.7},
-  {s:'S2',date:'27 Apr',weight:89.2,bf:7.8,tbw:59.1,muscle:46.1,fat:7.0,vfa:37,whr:0.72,bio:30,bwi:9.0},
-  {s:'S3',date:'3 May',weight:88.5,bf:6.8,tbw:59.4,muscle:46.4,fat:6.0,vfa:34,whr:0.71,bio:30,bwi:9.0},
-  {s:'S4',date:'8 May',weight:88.5,bf:12.2,tbw:56.0,muscle:43.6,fat:10.8,vfa:55,whr:0.80,bio:31,bwi:8.7},
-  {s:'S5',date:'15 May',weight:88.8,bf:11.4,tbw:56.7,muscle:44.1,fat:10.1,vfa:49,whr:0.77,bio:31,bwi:8.7},
-  {s:'S6',date:'21 May',weight:88.4,bf:13.2,tbw:55.2,muscle:42.9,fat:11.7,vfa:59,whr:0.81,bio:32,bwi:8.7},
-  {s:'S7',date:'22 May',weight:88.9,bf:7.8,tbw:59.1,muscle:46.1,fat:6.9,vfa:36,whr:0.72,bio:31,bwi:9.0},
-];
-
-const lcMonthly = [
-  {m:'2025-03',office:135.2,yoga:33.2,gym:36.9,surf:0.5,cycle:0.0,social:33.1,rhr:55.5,hrv:43.8,hrr:41.9,vo2:52.3},
-  {m:'2025-04',office:91.0,yoga:60.8,gym:33.4,surf:1.6,cycle:0.3,social:28.9,rhr:54.4,hrv:42.7,hrr:40.1,vo2:51.5},
-  {m:'2025-05',office:52.3,yoga:21.1,gym:25.9,surf:0.0,cycle:0.2,social:42.3,rhr:56.6,hrv:43.5,hrr:40.8,vo2:50.5},
-  {m:'2025-06',office:124.7,yoga:15.8,gym:39.1,surf:0.0,cycle:4.4,social:40.5,rhr:53.7,hrv:46.8,hrr:42.7,vo2:50.0},
-  {m:'2025-07',office:118.7,yoga:11.7,gym:48.5,surf:0.0,cycle:4.4,social:28.6,rhr:54.6,hrv:44.9,hrr:37.7,vo2:49.1},
-  {m:'2025-08',office:148.4,yoga:0.0,gym:52.7,surf:0.0,cycle:4.8,social:20.4,rhr:56.3,hrv:47.0,hrr:29.4,vo2:47.1},
-  {m:'2025-09',office:131.8,yoga:4.0,gym:36.1,surf:0.0,cycle:2.2,social:35.2,rhr:61.1,hrv:38.5,hrr:33.0,vo2:48.0},
-  {m:'2025-10',office:128.9,yoga:0.0,gym:40.3,surf:0.0,cycle:1.1,social:26.2,rhr:62.8,hrv:37.8,hrr:38.8,vo2:48.4},
-  {m:'2025-11',office:141.9,yoga:0.0,gym:35.1,surf:0.0,cycle:0.2,social:34.4,rhr:63.5,hrv:38.5,hrr:37.0,vo2:48.9},
-  {m:'2025-12',office:70.8,yoga:0.9,gym:38.5,surf:7.5,cycle:0.1,social:19.7,rhr:62.5,hrv:37.3,hrr:36.3,vo2:46.9},
-  {m:'2026-01',office:93.4,yoga:0.4,gym:38.2,surf:2.4,cycle:0.2,social:10.6,rhr:62.6,hrv:36.2,hrr:36.9,vo2:47.3},
-  {m:'2026-02',office:95.5,yoga:0.4,gym:32.1,surf:0.0,cycle:0.2,social:11.7,rhr:64.6,hrv:35.4,hrr:40.2,vo2:47.5},
-  {m:'2026-03',office:116.0,yoga:0.0,gym:41.1,surf:2.4,cycle:0.5,social:24.9,rhr:66.2,hrv:40.1,hrr:32.5,vo2:46.4},
-  {m:'2026-04',office:109.3,yoga:0.0,gym:42.9,surf:3.6,cycle:1.0,social:29.8,rhr:64.7,hrv:39.0,hrr:29.1,vo2:45.3},
-  {m:'2026-05',office:58.5,yoga:0.0,gym:26.6,surf:1.4,cycle:2.3,social:12.8,rhr:66.9,hrv:40.6,hrr:32.1,vo2:43.1},
-];
-
 // ── Chart.js defaults ──
 Chart.defaults.color = '#5a6e8a';
 Chart.defaults.font.family = "'DM Mono', monospace";
@@ -1090,40 +1091,179 @@ function lineChart(id,data,labs,color,refVal,refLbl){
   return new Chart(document.getElementById(id),{type:'line',data:{labels:labs,datasets:ds},options:merge(base,{plugins:{legend:{display:!!refVal,position:'bottom',labels:{color:'#5a6e8a',font:{size:9},boxWidth:8,padding:8}}}})});
 }
 
-// ── TODAY: Score computation ──
+// ── TODAY: Score computation & dynamic rendering ──
 (function(){
   document.getElementById('todayDate').textContent = new Date().toLocaleDateString('en-AU',{weekday:'long',day:'numeric',month:'long',year:'numeric'}).toUpperCase();
-  const lastDay = daily[daily.length-2]; // May 19 last full day
-  const hrv_norm = Math.min(100,Math.max(0,(lastDay.hrv-25)/(65-25)*100));
-  const rhr_norm = Math.min(100,Math.max(0,(80-lastDay.rhr)/(80-48)*100));
-  const sleep_norm = Math.min(100,Math.max(0,(lastDay.sleep-4)/(9-4)*100));
-  const steps_norm = Math.min(100,Math.max(0,(lastDay.steps-2000)/(20000-2000)*100));
-  const score = Math.round(hrv_norm*0.3+rhr_norm*0.25+sleep_norm*0.25+steps_norm*0.2);
-  document.getElementById('todayScore').textContent = score;
-  const drivers=[
-    {name:'HRV',val:lastDay.hrv+'ms',pct:hrv_norm,ref:40.6,delta:lastDay.hrv-40.6,unit:'ms'},
-    {name:'Resting HR',val:lastDay.rhr+'bpm',pct:rhr_norm,ref:66.9,delta:lastDay.rhr-66.9,unit:'bpm'},
-    {name:'Sleep',val:lastDay.sleep.toFixed(1)+'h',pct:sleep_norm,ref:7.18,delta:lastDay.sleep-7.18,unit:'h'},
-    {name:'Steps',val:(lastDay.steps/1000).toFixed(1)+'k',pct:steps_norm,ref:12097,delta:lastDay.steps-12097,unit:''},
+  var lastDay = daily[daily.length-1];
+  var cur = monthly[monthly.length-1];
+  var hrv_norm = Math.min(100,Math.max(0,(lastDay.hrv-25)/(65-25)*100));
+  var rhr_norm = Math.min(100,Math.max(0,(80-lastDay.rhr)/(80-48)*100));
+  var sleep_norm = Math.min(100,Math.max(0,(lastDay.sleep-4)/(9-4)*100));
+  var steps_norm = Math.min(100,Math.max(0,(lastDay.steps-2000)/(20000-2000)*100));
+  var score = Math.round(hrv_norm*0.3+rhr_norm*0.25+sleep_norm*0.25+steps_norm*0.2);
+  var scoreEl = document.getElementById('todayScore');
+  scoreEl.textContent = score;
+  scoreEl.style.color = score>=65?'var(--sage)':score>=50?'var(--gold)':score>=38?'var(--amber)':'var(--coral)';
+  var statusEl = scoreEl.parentElement.querySelector('.status-badge');
+  if(statusEl){
+    if(score>=65){ statusEl.className='status-badge optimal'; statusEl.innerHTML='<div class="status-dot"></div>Optimal'; }
+    else if(score>=50){ statusEl.className='status-badge good'; statusEl.innerHTML='<div class="status-dot"></div>Good'; }
+    else if(score>=38){ statusEl.className='status-badge reduced'; statusEl.innerHTML='<div class="status-dot"></div>Reduced'; }
+    else { statusEl.className='status-badge low'; statusEl.innerHTML='<div class="status-dot"></div>Low'; }
+  }
+
+  // Headline
+  var hl = document.getElementById('todayHeadline');
+  if(hl){
+    var vo2Vals = daily.filter(function(d){return d.vo2;});
+    var vo2Falling = vo2Vals.length>1 && vo2Vals[vo2Vals.length-1].vo2 < vo2Vals[0].vo2;
+    var hrrAbove30 = daily.filter(function(d){return d.hrr&&d.hrr>=30;}).length;
+    if(lastDay.hrv > cur.hrv && vo2Falling){
+      hl.innerHTML = 'HRV tracking above May average. VO&#8322; continuing to slide &mdash; cardiovascular lag is expected during early programme weeks.';
+    } else if(lastDay.hrv < 28){
+      hl.innerHTML = 'HRV in suppression territory &mdash; autonomic load is high. Prioritise recovery today.';
+    } else if(score>=65){
+      hl.innerHTML = 'Strong readiness. HRR above 30 bpm/min in '+hrrAbove30+' May readings &mdash; recovery programme is responding.';
+    } else {
+      hl.innerHTML = 'Metrics holding steady. Consistency is the lever at Week '+currentWeek+' of the programme.';
+    }
+  }
+
+  // Drivers
+  var drivers = [
+    {name:'HRV', val:lastDay.hrv+'ms', pct:hrv_norm, ref:cur.hrv, delta:lastDay.hrv-cur.hrv, unit:'ms'},
+    {name:'Resting HR', val:lastDay.rhr+'bpm', pct:rhr_norm, ref:cur.rhr, delta:lastDay.rhr-cur.rhr, unit:'bpm'},
+    {name:'Sleep', val:lastDay.sleep.toFixed(1)+'h', pct:sleep_norm, ref:cur.sleep, delta:lastDay.sleep-cur.sleep, unit:'h'},
+    {name:'Steps', val:(lastDay.steps/1000).toFixed(1)+'k', pct:steps_norm, ref:cur.steps, delta:lastDay.steps-cur.steps, unit:''},
   ];
-  const tf=document.getElementById('todayFactors');
-  drivers.forEach(d=>{
-    const good = (d.name==='Resting HR')?d.delta<0:d.delta>0;
-    const row=document.createElement('div');row.className='factor-row';
-    row.innerHTML=`<div class="factor-name">${d.name}</div><div class="factor-val">${d.val}</div><div class="factor-delta ${good?'delta-up':'delta-down'}" style="margin-left:12px;">${d.delta>0?'+':''}${d.delta.toFixed(1)}${d.unit} vs avg</div>`;
+  var tf = document.getElementById('todayFactors');
+  if(tf) drivers.forEach(function(d){
+    var good = (d.name==='Resting HR') ? d.delta<0 : d.delta>0;
+    var row = document.createElement('div'); row.className='factor-row';
+    var sign = d.delta>0?'+':'';
+    row.innerHTML = '<div class="factor-name">'+d.name+'</div><div class="factor-val">'+d.val+'</div>'
+      +'<div class="factor-delta '+(good?'delta-up':'delta-down')+'" style="margin-left:12px;">'+sign+d.delta.toFixed(1)+d.unit+' vs avg</div>';
     tf.appendChild(row);
   });
+
+  // Sleep card
+  var sc = document.getElementById('todaySleepCard');
+  if(sc && lastDay.sleep){
+    var deepPct = Math.round(lastDay.deep/lastDay.sleep*100);
+    var remPct  = Math.round(lastDay.rem/lastDay.sleep*100);
+    var corePct = Math.max(0,96-deepPct-remPct);
+    var sleepColor = lastDay.sleep>=7.5?'var(--sage)':'var(--teal)';
+    sc.innerHTML = '<div class="card-label">Last night sleep</div>'
+      +'<div style="display:flex;align-items:baseline;gap:8px;margin-bottom:8px;">'
+      +'<div style="font-family:\'Barlow Condensed\',sans-serif;font-size:36px;font-weight:500;color:'+sleepColor+'">'+lastDay.sleep.toFixed(1)+'</div>'
+      +'<div style="font-family:\'DM Mono\',monospace;font-size:10px;color:var(--muted);">hrs</div>'
+      +'<div style="font-family:\'DM Mono\',monospace;font-size:10px;color:var(--muted);margin-left:auto;">'+lastDay.deep.toFixed(1)+'h deep &middot; '+lastDay.rem.toFixed(1)+'h REM</div>'
+      +'</div>'
+      +'<div class="sleep-night">'
+      +'<div class="sleep-seg sleep-awake" style="width:2%"></div>'
+      +'<div class="sleep-seg sleep-core" style="width:'+corePct+'%;font-size:7px;">core</div>'
+      +'<div class="sleep-seg sleep-deep" style="width:'+deepPct+'%">deep</div>'
+      +'<div class="sleep-seg sleep-rem" style="width:'+remPct+'%">REM</div>'
+      +'<div class="sleep-seg sleep-awake" style="width:2%"></div>'
+      +'</div>'
+      +'<div style="display:flex;gap:16px;margin-top:8px;font-family:\'DM Mono\',monospace;font-size:9px;color:var(--muted);">'
+      +'<span style="color:var(--teal)">&#9632;</span> Deep '
+      +'<span style="color:var(--plum)">&#9632;</span> REM '
+      +'<span style="color:var(--s4)">&#9632;</span> Core</div>';
+  }
+
+  // Training card
+  var tc = document.getElementById('todayTrainingCard');
+  if(tc){
+    var yesterday = daily[daily.length-2];
+    var daySess = sessions.filter(function(s){return s.d===yesterday.d;});
+    var totalDur = daySess.reduce(function(a,b){return a+b.dur;},0);
+    var totalZ3  = daySess.reduce(function(a,b){return a+b.z3;},0);
+    var totalZ2  = daySess.reduce(function(a,b){return a+b.z2;},0);
+    var avgHr = daySess.length ? Math.round(daySess.reduce(function(a,b){return a+b.hr*b.dur;},0)/totalDur) : null;
+    var typeSet = []; daySess.forEach(function(s){if(typeSet.indexOf(s.type)<0)typeSet.push(s.type);});
+    var types = typeSet.join(' + ');
+    var z3Pct = totalDur>0 ? Math.round(totalZ3/totalDur*100) : 0;
+    var z2Pct = totalDur>0 ? Math.round(totalZ2/totalDur*100) : 0;
+    var z1Pct = Math.max(0,100-z3Pct-z2Pct);
+    var html = '<div class="card-label">Yesterday training</div>'
+      +'<div style="font-family:\'Barlow Condensed\',sans-serif;font-size:15px;font-weight:500;margin-bottom:10px;color:var(--ink2);">'
+      +(types||'Rest day')+' &middot; '+(totalDur||0)+' min</div>';
+    if(totalDur>0){
+      html += '<div style="display:flex;gap:0;height:20px;margin-bottom:8px;">'
+        +'<div style="background:var(--s3);height:100%;flex:'+z1Pct+'"></div>'
+        +'<div style="background:rgba(91,159,191,0.3);height:100%;flex:'+z2Pct+'"></div>'
+        +'<div style="background:rgba(91,159,191,0.65);height:100%;flex:'+z3Pct+'"></div>'
+        +'</div>'
+        +'<div style="display:flex;gap:16px;font-family:\'DM Mono\',monospace;font-size:9px;color:var(--muted);">'
+        +'<span>Z1 <span style="color:var(--ink2)">'+z1Pct+'%</span></span>'
+        +'<span>Z2 <span style="color:var(--teal)">'+z2Pct+'%</span></span>'
+        +'<span>Z3 <span style="color:var(--teal2)">'+z3Pct+'%</span></span>'
+        +'</div>'
+        +'<div style="font-family:\'DM Mono\',monospace;font-size:9px;color:var(--muted);margin-top:10px;">'
+        +(yesterday&&yesterday.hrr ? 'HRR: <span style="color:var(--sage)">'+yesterday.hrr+' bpm/min</span> &middot; ' : '')
+        +(avgHr ? 'Avg HR: <span style="color:var(--ink2)">'+avgHr+' bpm</span> &middot; ' : '')
+        +'Z3: <span style="color:var(--teal2)">'+totalZ3.toFixed(1)+' min</span></div>';
+    } else {
+      html += '<div style="font-family:\'DM Mono\',monospace;font-size:11px;color:var(--muted);">No tracked sessions</div>';
+    }
+    tc.innerHTML = html;
+  }
+
+  // Anomaly feed
+  var af = document.getElementById('anomalyFeed');
+  if(af){
+    var anomalies = [];
+    var hrvVals = daily.filter(function(d){return d.hrv;}).map(function(d){return d.hrv;});
+    var maxHrv = Math.max.apply(null,hrvVals);
+    var minHrv = Math.min.apply(null,hrvVals);
+    var maxHrvDay = daily.find(function(d){return d.hrv===maxHrv;});
+    var minHrvDay = daily.find(function(d){return d.hrv===minHrv;});
+    if(maxHrv>=55) anomalies.push({cls:'anom-good',text:'<strong>HRV '+maxHrv+' ms</strong> on '+maxHrvDay.d+' &mdash; near-peak autonomic reading. High ceiling confirms recovery capacity is intact.',time:maxHrvDay.d});
+    if(minHrv<=27) anomalies.push({cls:'anom-alert',text:'<strong>HRV '+minHrv+' ms</strong> on '+minHrvDay.d+' &mdash; lowest reading in May. Transient suppression, not structural.',time:minHrvDay.d});
+    var vo2s = daily.filter(function(d){return d.vo2;});
+    if(vo2s.length>1 && vo2s[vo2s.length-1].vo2 < vo2s[0].vo2){
+      var lv = vo2s[vo2s.length-1];
+      anomalies.push({cls:'anom-warn',text:'<strong>VO&#8322; '+lv.vo2+'</strong> on '+lv.d+' &mdash; down from '+vo2s[0].vo2+' at month start. Apple Watch VO&#8322; lags adaptation by 4&ndash;6 weeks; expect improvement after Week 6.',time:lv.d});
+    }
+    var hrrAbove = daily.filter(function(d){return d.hrr&&d.hrr>=30;});
+    if(hrrAbove.length>=4) anomalies.push({cls:'anom-good',text:'<strong>HRR above 30 bpm/min</strong> in '+hrrAbove.length+' May readings &mdash; consistently above the clinical recovery threshold.',time:'May avg'});
+    var highRhr = daily.filter(function(d){return d.rhr&&d.rhr>=70;});
+    if(highRhr.length) anomalies.push({cls:'anom-warn',text:'<strong>RHR spike to '+Math.max.apply(null,highRhr.map(function(d){return d.rhr;}))+'</strong> &mdash; '+highRhr.length+' reading(s) above 70 bpm. Monthly avg remains '+cur.rhr+'.',time:highRhr[0].d});
+    var ahtml = '';
+    anomalies.slice(0,5).forEach(function(a){
+      ahtml += '<div class="anomaly-item"><div class="anomaly-dot '+a.cls+'"></div><div class="anomaly-text">'+a.text+'</div><div class="anomaly-time">'+a.time+'</div></div>';
+    });
+    af.innerHTML = ahtml;
+  }
+
+  // Action prompt
+  var ap = document.getElementById('actionPrompt');
+  if(ap){
+    var tgt = planTargets[currentWeek]||planTargets[planTargets.length-1];
+    var rhrGap = (lastDay.rhr-tgt.rhr).toFixed(1);
+    var hrvStatus = lastDay.hrv>=tgt.hrv ? 'on target' : 'below target by '+(tgt.hrv-lastDay.hrv).toFixed(1)+' ms';
+    var action = score>=65
+      ? 'Readiness is high. Good day for higher intensity work &mdash; surf session or afternoon strength block with jump rope will drive Zone 3 output. Avoid back-to-back high days.'
+      : score>=50
+      ? 'Moderate readiness. Strength plus incline treadmill walk is the optimal combination. Afternoon sessions consistently produce better cardiovascular output.'
+      : 'Score below 50 &mdash; prioritise sleep and recovery. A gentle incline walk is fine; skip high-intensity work today.';
+    ap.innerHTML = '<div style="font-family:\'Barlow Condensed\',sans-serif;font-size:18px;font-weight:500;margin-bottom:8px;">'
+      +'Week '+currentWeek+' of 13 &mdash; RHR '+rhrGap+' bpm above week target &middot; HRV '+hrvStatus+'</div>'
+      +'<div style="font-size:13px;color:var(--ink2);line-height:1.7;">'+action+'</div>';
+  }
 })();
 
 window.addEventListener('load',()=>{
 
+
 // ── CARDIOVASCULAR: Bullet chart ──
 (function(){
   const metrics=[
-    {name:'RHR',current:66.9,best:54.3,pop50:68,pop75:63,unit:'bpm',higher_is_worse:true},
-    {name:'HRV',current:40.6,best:46.8,pop50:35,pop75:45,unit:'ms',higher_is_worse:false},
-    {name:'HRR',current:32.1,best:42.7,pop50:28,pop75:35,unit:'bpm/min',higher_is_worse:false},
-    {name:'VO₂',current:43.1,best:52.3,pop50:39,pop75:46,unit:'ml/kg·min',higher_is_worse:false},
+    {name:'RHR',current:66.7,best:54.3,pop50:68,pop75:63,unit:'bpm',higher_is_worse:true},
+    {name:'HRV',current:42.3,best:46.8,pop50:35,pop75:45,unit:'ms',higher_is_worse:false},
+    {name:'HRR',current:32.4,best:42.7,pop50:28,pop75:35,unit:'bpm/min',higher_is_worse:false},
+    {name:'VO₂',current:42.9,best:52.3,pop50:39,pop75:46,unit:'ml/kg·min',higher_is_worse:false},
   ];
   const bc=document.getElementById('bulletCard');
   bc.innerHTML='<div class="card-label" style="margin-bottom:16px;">Gold line = personal best · Blue = population range (age 36 male) · Bar = current</div>';
@@ -1181,7 +1321,130 @@ window.addEventListener('load',()=>{
   });
 })();
 
+// ── Dynamic headlines ──
+(function(){
+  var cur = monthly[monthly.length-1];
+  var best = {rhr:54.3,hrv:46.8,hrr:42.7,vo2:52.3};
+
+  // Cardio HL
+  var hl = document.getElementById('cardioHL');
+  if(hl){
+    var pctBelow = Math.round((best.vo2-cur.vo2)/best.vo2*100);
+    var hrrAbove30 = daily.filter(function(d){return d.hrr&&d.hrr>=30;}).length;
+    hl.innerHTML = 'Your cardiovascular fitness is <span class="down">'+pctBelow+'% below your 2025 peak.</span> HRR above 30 bpm/min in <span class="up">'+hrrAbove30+' May readings</span> &mdash; recovery response confirmed.';
+  }
+
+  // Training HL
+  var thl = document.getElementById('trainingHL');
+  if(thl){
+    var z3weekly = Math.round(cur.z2plus/4.33);
+    var z3cls = cur.z3>15?'up':'neutral';
+    thl.innerHTML = 'Zone 3 at <span class="'+z3cls+'">'+cur.z3.toFixed(1)+'%</span> of May exercise time. Weekly Z2+ average <span class="neutral">'+z3weekly+' min</span> &mdash; building the aerobic base.';
+  }
+
+  // Sleep HL
+  var shl = document.getElementById('sleepHL');
+  if(shl){
+    var debt = ((cur.sleep-7.5)*23).toFixed(1);
+    var deepCls = cur.deep>=0.9?'up':'neutral';
+    shl.innerHTML = 'Deep sleep at <span class="'+deepCls+'">'+cur.deep+'h average</span> in May. '
+      +(parseFloat(debt)<0 ? '<span class="down">'+Math.abs(parseFloat(debt)).toFixed(1)+'h sleep debt</span> accumulated this month vs 7.5h target.' : 'Sleep target met this month.');
+  }
+
+  // Body HL
+  var bhl = document.getElementById('bodyHL');
+  if(bhl){
+    var ls = scans[scans.length-1];
+    var vfaCls = ls.vfa<=50?'up':'down';
+    bhl.innerHTML = 'S'+scans.length+' ('+ls.date+') VFA <span class="'+vfaCls+'">'+ls.vfa+' cm&#178;</span> &middot; BWI '+ls.bwi+' &middot; Bio Age '+ls.bio+' yrs.'
+      +(ls.flagged?' <span class="neutral">Height discrepancy in S6 (180 cm vs 177 cm prior) &mdash; trend comparison requires caution.</span>':'');
+  }
+
+  // Relationships HL
+  var rhl = document.getElementById('relHL');
+  if(rhl) rhl.innerHTML = 'Surfing sessions drive the strongest same-week HRR response in the dataset. The <span class="down">high office load + low recovery</span> pattern remains the most consistent predictor of suppressed HRV.';
+
+  // Journal HL
+  var jhl = document.getElementById('journalHL');
+  if(jhl){
+    var maxHrvDay = daily.reduce(function(a,b){return (b.hrv&&(!a.hrv||b.hrv>a.hrv))?b:a;},{});
+    var vo2arr = daily.filter(function(d){return d.vo2;});
+    var minVo2Day = vo2arr.reduce(function(a,b){return b.vo2<a.vo2?b:a;});
+    var tracked = daily.filter(function(d){return d.rhr;}).length;
+    jhl.innerHTML = 'May: <span class="up">'+tracked+' days tracked</span>. HRV peaked at <span class="up">'+maxHrvDay.hrv+' ms</span> ('+maxHrvDay.d+'). VO&#8322; last reading <span class="down">'+minVo2Day.vo2+'</span> on '+minVo2Day.d+' &mdash; Apple Watch metric lags physiological adaptation by 4&ndash;6 weeks.';
+  }
+
+  // Body scan cards
+  var bsc = document.getElementById('bodyScanCards');
+  if(bsc){
+    var ls2 = scans[scans.length-1];
+    var prev = scans.length>1?scans[scans.length-2]:null;
+    var vfaColor = ls2.vfa<=50?'var(--sage)':ls2.vfa<=60?'var(--amber)':'var(--coral)';
+    var vfaRange = ls2.vfa<=50?'Optimal range':ls2.vfa<=60?'Borderline':'Elevated';
+    var vfaDelta = prev?(ls2.vfa>prev.vfa?'+':'')+( ls2.vfa-prev.vfa)+' vs S'+(scans.length-1):'';
+    var bwiColor = ls2.bwi>=9?'var(--sage)':ls2.bwi>=8.5?'var(--teal)':'var(--gold)';
+    var scanAvgBwi = (scans.reduce(function(a,b){return a+b.bwi;},0)/scans.length).toFixed(2);
+    var bioYounger = 36-ls2.bio;
+    var tbwLabel = ls2.tbw>=58?'Well hydrated':ls2.tbw>=56?'Adequate':'Low — fat metrics inflated';
+    var tbwCls = ls2.tbw>=56.5?'delta-up':'delta-down';
+    var tbwNote = ls2.tbw>=56.5?'BIA reliable':'BIA noise: interpret with caution';
+    bsc.innerHTML =
+      '<div class="card accent-'+(ls2.vfa<=50?'sage':'amber')+'">'
+        +'<div class="card-label">VFA &middot; S'+scans.length+'</div>'
+        +'<div class="card-val" style="color:'+vfaColor+'">'+ls2.vfa+'</div>'
+        +'<div class="card-unit">cm&#178; &middot; '+vfaRange+'</div>'
+        +'<div class="card-delta '+(ls2.vfa<=50?'delta-up':'delta-down')+'">'+vfaDelta+(ls2.flagged?' &#9888; S6 flagged':'')+'</div>'
+      +'</div>'
+      +'<div class="card accent-teal">'
+        +'<div class="card-label">BWI score &middot; S'+scans.length+'</div>'
+        +'<div class="card-val" style="color:'+bwiColor+'">'+ls2.bwi+'</div>'
+        +'<div class="card-unit">/ 10 &middot; Athletic tier</div>'
+        +'<div class="card-delta delta-flat">'+scans.length+'-scan avg: '+scanAvgBwi+'</div>'
+      +'</div>'
+      +'<div class="card accent-gold">'
+        +'<div class="card-label">Bio age &middot; S'+scans.length+'</div>'
+        +'<div class="card-val" style="color:var(--gold)">'+ls2.bio+'</div>'
+        +'<div class="card-unit">yrs vs chrono 36</div>'
+        +'<div class="card-delta delta-up">'+bioYounger+' yrs younger</div>'
+      +'</div>'
+      +'<div class="card accent-amber">'
+        +'<div class="card-label">TBW &middot; S'+scans.length+'</div>'
+        +'<div class="card-val" style="color:var(--amber)">'+ls2.tbw+'</div>'
+        +'<div class="card-unit">kg &middot; '+tbwLabel+'</div>'
+        +'<div class="card-delta '+tbwCls+'">'+tbwNote+'</div>'
+      +'</div>';
+  }
+
+  // Sleep debt card
+  var sdc = document.getElementById('sleepDebtCard');
+  if(sdc){
+    var recentSleep = daily.slice(-14).filter(function(d){return d.sleep;});
+    var avgSl = recentSleep.reduce(function(a,b){return a+b.sleep;},0)/recentSleep.length;
+    var debt2 = (avgSl-7.5)*recentSleep.length;
+    var debtColor = debt2<0?'var(--amber)':'var(--sage)';
+    sdc.innerHTML = '<div class="card-label">14-day sleep debt</div>'
+      +'<div class="card-val" style="color:'+debtColor+';">'+(debt2<0?'':'+')+(debt2).toFixed(1)+'</div>'
+      +'<div class="card-unit">hours '+(debt2<0?'deficit':'surplus')+' vs 7.5h target</div>'
+      +'<div style="font-family:\'DM Mono\',monospace;font-size:9px;color:var(--muted);line-height:1.6;margin-top:8px;">'
+      +'Avg actual: '+avgSl.toFixed(2)+'h/night<br>Target: 7.5h/night<br>Shortfall: '+(avgSl-7.5).toFixed(2)+'h/night</div>';
+  }
+
+  // Sleep efficiency card
+  var sec = document.getElementById('sleepEffCard');
+  if(sec){
+    var eff = Math.round((cur.deep+cur.rem)/cur.sleep*100);
+    var effColor = eff>=30?'var(--sage)':'var(--amber)';
+    var bestDeepDay = daily.reduce(function(a,b){return (b.deep&&(!a.deep||b.deep>a.deep))?b:a;},{});
+    sec.innerHTML = '<div class="card-label">Sleep efficiency</div>'
+      +'<div class="card-val" style="color:'+effColor+'">'+eff+'</div>'
+      +'<div class="card-unit">% in Deep+REM (target &ge;30%)</div>'
+      +'<div style="font-family:\'DM Mono\',monospace;font-size:9px;color:var(--muted);margin-top:6px;">'
+      +'Best deep night: '+bestDeepDay.d+' ('+bestDeepDay.deep.toFixed(2)+'h) &middot; May avg: '+eff+'%</div>';
+  }
+})();
+
 // ABI chart
+
 lineChart('abiChart',monthly.map(d=>d.abi),mLabels,TEAL,null,null);
 
 // HRV vs RHR scatter
@@ -1207,8 +1470,8 @@ new Chart(document.getElementById('stressIndexChart'),{
   const container=document.getElementById('rhrHeatmap');
   const rhrByDate={};
   daily.forEach(d=>{if(d.rhr)rhrByDate['2026-05-'+d.d.split(' ')[1].padStart(2,'0')]=d.rhr;});
-  const months=[{label:'Mar 25',days:31,start:'2025-03'},{label:'Apr 25',days:30,start:'2025-04'},{label:'May 25',days:31,start:'2025-05'},{label:'Jun 25',days:30,start:'2025-06'},{label:'Jul 25',days:31,start:'2025-07'},{label:'Aug 25',days:31,start:'2025-08'},{label:'Sep 25',days:30,start:'2025-09'},{label:'Oct 25',days:31,start:'2025-10'},{label:'Nov 25',days:30,start:'2025-11'},{label:'Dec 25',days:31,start:'2025-12'},{label:'Jan 26',days:31,start:'2026-01'},{label:'Feb 26',days:28,start:'2026-02'},{label:'Mar 26',days:31,start:'2026-03'},{label:'Apr 26',days:30,start:'2026-04'},{label:'May 26',days:20,start:'2026-05'}];
-  const monthAvgs={'2025-03':55.5,'2025-04':54.3,'2025-05':56.6,'2025-06':53.7,'2025-07':54.5,'2025-08':56.3,'2025-09':61.1,'2025-10':62.8,'2025-11':63.5,'2025-12':62.5,'2026-01':62.6,'2026-02':64.6,'2026-03':66.2,'2026-04':64.7};
+  const months=[{label:'Mar 25',days:31,start:'2025-03'},{label:'Apr 25',days:30,start:'2025-04'},{label:'May 25',days:31,start:'2025-05'},{label:'Jun 25',days:30,start:'2025-06'},{label:'Jul 25',days:31,start:'2025-07'},{label:'Aug 25',days:31,start:'2025-08'},{label:'Sep 25',days:30,start:'2025-09'},{label:'Oct 25',days:31,start:'2025-10'},{label:'Nov 25',days:30,start:'2025-11'},{label:'Dec 25',days:31,start:'2025-12'},{label:'Jan 26',days:31,start:'2026-01'},{label:'Feb 26',days:28,start:'2026-02'},{label:'Mar 26',days:31,start:'2026-03'},{label:'Apr 26',days:30,start:'2026-04'},{label:'May 26',days:23,start:'2026-05'}];
+  const monthAvgs={'2025-03':55.5,'2025-04':54.3,'2025-05':56.6,'2025-06':53.7,'2025-07':54.5,'2025-08':56.3,'2025-09':61.1,'2025-10':62.8,'2025-11':63.5,'2025-12':62.5,'2026-01':62.6,'2026-02':64.6,'2026-03':66.2,'2026-04':64.7,'2026-05':66.7};
   const wrap=document.createElement('div');wrap.style.cssText='display:flex;flex-wrap:wrap;gap:8px;';
   months.forEach(mo=>{
     const mwrap=document.createElement('div');mwrap.style.cssText='display:flex;flex-direction:column;gap:2px;';
@@ -1329,7 +1592,7 @@ new Chart(document.getElementById('workoutMixChart'),{
     options:merge(base,{plugins:{legend:{display:false}},scales:{x:{...base.scales.x},y:{...base.scales.y,max:100,ticks:{callback:v=>v}}}})
   });
 })();
-lineChart('deepSleepChart',monthly.map(d=>d.deep),mLabels,TEAL,0.69,'Hist avg 0.69h');
+lineChart('deepSleepChart',monthly.map(d=>d.deep),mLabels,TEAL,0.70,'Hist avg 0.70h');
 lineChart('remSleepChart',monthly.map(d=>d.rem),mLabels,PLUM,1.54,'Hist avg 1.54h');
 
 // Sleep→HRV scatter
@@ -1411,7 +1674,7 @@ const mainDefs={
   abi:{label:'Autonomic Balance Index',color:TEAL,ref:87.2,refLbl:'Best (87.2)'},
   deep:{label:'Deep sleep (h)',color:TEAL,ref:0.97,refLbl:'Best (0.97)'},
   rem:{label:'REM sleep (h)',color:PLUM,ref:2.11,refLbl:'Best (2.11)'},
-  z3:{label:'Zone 3% of exercise',color:GOLD,ref:22.3,refLbl:'Current best (22.3%)'},
+  z3:{label:'Zone 3% of exercise',color:GOLD,ref:18.1,refLbl:'Current (18.1%)'},
   steps:{label:'Daily steps',color:AMBER,ref:14730,refLbl:'Best month (14,730)'},
 };
 window.setMain=function(key,btn){
@@ -1428,7 +1691,7 @@ window.setMain=function(key,btn){
     options:merge(base,{plugins:{legend:{display:true,position:'bottom',labels:{color:'#5a6e8a',font:{size:9},boxWidth:8,padding:8}}}})
   });
 };
-window.setMain('rhr',document.querySelector('.msb'));
+setMain('rhr',document.querySelector('.msb'));
 
 // Period bands table
 (function(){
@@ -1437,7 +1700,7 @@ window.setMain('rhr',document.querySelector('.msb'));
     {n:'Post-injury',r:'May–Aug 2025',cls:'period-decline',rhr:55.3,hrv:45.6,hrr:37.7,vo2:49.2,deep:0.60},
     {n:'Decline',r:'Sep–Dec 2025',cls:'period-decline',rhr:62.5,hrv:38.0,hrr:36.5,vo2:48.1,deep:0.72},
     {n:'Recovery',r:'Jan–Apr 2026',cls:'period-recovery',rhr:64.5,hrv:37.7,hrr:34.7,vo2:46.6,deep:0.90},
-    {n:'Now',r:'May 2026',cls:'period-now',rhr:66.9,hrv:40.6,hrr:32.1,vo2:43.1,deep:0.99},
+    {n:'Now',r:'May 2026',cls:'period-now',rhr:66.7,hrv:42.3,hrr:32.4,vo2:42.9,deep:0.95},
   ];
   const container=document.getElementById('periodBands');
   let html='';
