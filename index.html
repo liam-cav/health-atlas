@@ -1,3 +1,4 @@
+
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -99,6 +100,62 @@ input[type="file"] { font-size: 12px; color: var(--ink2); padding: 4px; }
 /* WARNINGS */
 .warn-banner { background: var(--s1); border: 1px solid rgba(91, 159, 191, 0.2); border-left: 4px solid var(--slate); padding: 12px; border-radius: 4px; margin-bottom: 20px; font-size: 13px; line-height: 1.6; }
 .warn-banner strong { color: var(--ink); }
+
+
+
+/* LIFE CYCLE STORY ENGINE */
+.lc-topbar { display:flex; justify-content:space-between; align-items:flex-start; gap:16px; margin-bottom:14px; flex-wrap:wrap; }
+.lc-control { display:flex; flex-direction:column; gap:6px; min-width:180px; }
+.lc-control label { font-family:'IBM Plex Mono',monospace; font-size:9px; color:var(--muted); text-transform:uppercase; letter-spacing:.12em; }
+.lc-control select { background:var(--s1); color:var(--ink); border:1px solid var(--border); border-radius:4px; padding:9px 10px; font-size:13px; }
+.lc-hero { background:linear-gradient(135deg, rgba(212,165,116,.12), rgba(91,159,191,.08)); border:1px solid rgba(212,165,116,.25); border-radius:8px; padding:18px; margin-bottom:16px; }
+.lc-headline { font-family:'Libre Baskerville', Georgia, serif; font-size:30px; line-height:1.18; color:var(--ink); margin:4px 0 12px; }
+.lc-badges { display:flex; flex-wrap:wrap; gap:6px; margin-top:8px; }
+.lc-badge { font-family:'IBM Plex Mono',monospace; font-size:10px; border:1px solid var(--border); color:var(--ink2); background:var(--s2); border-radius:999px; padding:4px 8px; }
+.lc-badge.hot { border-color:rgba(212,165,116,.45); color:var(--rust); }
+.lc-badge.cool { border-color:rgba(91,159,191,.45); color:var(--slate); }
+.lc-signature-grid { display:grid; grid-template-columns:repeat(4,minmax(0,1fr)); gap:10px; margin-top:14px; }
+.lc-kpi { background:rgba(1,4,9,.38); border:1px solid var(--border); border-radius:6px; padding:12px; min-height:96px; }
+.lc-kpi .k { font-family:'IBM Plex Mono',monospace; font-size:9px; color:var(--muted); text-transform:uppercase; letter-spacing:.1em; margin-bottom:8px; }
+.lc-kpi .v { color:var(--ink); font-size:14px; line-height:1.35; }
+.lc-kpi .d { color:var(--muted); font-size:11px; margin-top:6px; }
+.lc-story-list { display:grid; grid-template-columns:repeat(auto-fit,minmax(220px,1fr)); gap:10px; }
+.lc-insight { background:var(--s1); border:1px solid var(--border); border-radius:6px; padding:12px; }
+.lc-insight.extreme { border-color:rgba(248,81,73,.55); }
+.lc-insight.unusual { border-color:rgba(212,165,116,.55); }
+.lc-insight.notable { border-color:rgba(91,159,191,.45); }
+.lc-insight h4 { font-size:13px; line-height:1.35; margin-bottom:8px; color:var(--ink); }
+.lc-insight .metric { font-family:'IBM Plex Mono',monospace; font-size:11px; color:var(--ink2); }
+.lc-insight .caveat { font-size:11px; color:var(--muted); margin-top:7px; }
+.lc-timeline { height:34px; display:flex; overflow:hidden; border-radius:5px; border:1px solid var(--border); background:var(--s0); }
+.lc-timeline span { height:100%; min-width:2px; }
+.lc-portfolio { display:grid; grid-template-columns:repeat(auto-fit,minmax(140px,1fr)); gap:8px; }
+.lc-port-card { border:1px solid var(--border); background:var(--s1); border-radius:6px; padding:10px; }
+.lc-port-card .name { display:flex; align-items:center; gap:7px; font-size:12px; color:var(--ink); margin-bottom:6px; }
+.lc-dot { width:8px; height:8px; border-radius:999px; display:inline-block; }
+.lc-port-card .mins { font-family:'IBM Plex Mono',monospace; font-size:13px; color:var(--ink2); }
+.lc-port-card .pct { font-family:'IBM Plex Mono',monospace; font-size:10px; color:var(--muted); }
+.lc-mini-bar { height:5px; background:var(--s2); border-radius:999px; overflow:hidden; margin-top:7px; }
+.lc-mini-bar span { display:block; height:100%; border-radius:999px; }
+.lc-fingerprint { overflow-x:auto; }
+.lc-fp-grid { min-width:720px; display:grid; grid-template-columns:140px repeat(7,1fr); gap:2px; font-family:'IBM Plex Mono',monospace; font-size:10px; }
+.lc-fp-cell { background:var(--s2); border-radius:3px; padding:7px; min-height:31px; color:var(--ink2); display:flex; align-items:center; justify-content:center; }
+.lc-fp-cell.rowhdr { justify-content:flex-start; color:var(--ink); background:var(--s1); }
+.lc-fp-cell.colhdr { color:var(--muted); background:transparent; text-transform:uppercase; letter-spacing:.08em; }
+.lc-archetypes { display:grid; grid-template-columns:repeat(auto-fit,minmax(150px,1fr)); gap:8px; }
+.lc-arch { background:var(--s1); border:1px solid var(--border); border-radius:6px; padding:10px; }
+.lc-arch.selected { border-color:var(--rust); background:rgba(212,165,116,.08); }
+.lc-arch .n { font-family:'Libre Baskerville', Georgia, serif; font-size:24px; color:var(--ink); }
+.lc-arch .label { font-size:12px; color:var(--muted); }
+.lc-tradeoffs { display:grid; grid-template-columns:repeat(auto-fit,minmax(220px,1fr)); gap:10px; }
+.lc-empty { color:var(--muted); font-size:12px; padding:8px 0; }
+@media (max-width: 760px) {
+  .lc-headline { font-size:24px; }
+  .lc-signature-grid { grid-template-columns:1fr; }
+  .lc-topbar { display:block; }
+  .lc-control { margin-top:10px; }
+  .cards-2 { grid-template-columns:1fr; }
+}
 
 /* FOOTER */
 .footer { font-family: 'IBM Plex Mono', monospace; font-size: 11px; color: var(--muted); margin-top: 40px; padding-top: 20px; border-top: 1px solid var(--border); }
@@ -295,20 +352,105 @@ canvas { max-height: 100%; }
 
 <!-- ══════════════════════════════════════════════════════ LIFE CYCLE -->
 <section id="s-lifestyle" class="section">
-  <div class="eb">Life Cycle app data · time allocation</div>
-  <div class="warn-banner">
-    <strong>Data corrections applied.</strong> Work → Office · Drinks → Commute. Ready for custom stress/hydration data.
+  <div class="lc-topbar">
+    <div>
+      <div class="eb">Life Cycle app data · commentary engine</div>
+      <div class="card-sub">Dynamic daily story using same-weekday baselines first, then full-period averages where needed.</div>
+    </div>
+    <div class="lc-control">
+      <label for="lcDateSelect">Selected day</label>
+      <select id="lcDateSelect"></select>
+    </div>
   </div>
-  
+
+  <div class="lc-hero">
+    <div class="pk">Today’s Signature</div>
+    <div class="lc-headline" id="lcHeadline">Reading the day…</div>
+    <div class="lc-badges" id="lcBadges"></div>
+    <div class="lc-signature-grid">
+      <div class="lc-kpi"><div class="k">Day type</div><div class="v" id="lcType">--</div><div class="d" id="lcTypeDetail">Generated from Life Cycle, workout and recovery signals.</div></div>
+      <div class="lc-kpi"><div class="k">Main Life Cycle driver</div><div class="v" id="lcDriver">--</div><div class="d">Largest meaningful context difference.</div></div>
+      <div class="lc-kpi"><div class="k">Training load signal</div><div class="v" id="lcTraining">--</div><div class="d">Exercise, steps, gym, walking and surfing.</div></div>
+      <div class="lc-kpi"><div class="k">Recovery context</div><div class="v" id="lcRecovery">--</div><div class="d">Sleep, HRV, RHR and HR recovery where present.</div></div>
+    </div>
+  </div>
+
   <div class="cards cards-2">
     <div class="card">
+      <h3>Top 3 unusual signals <small>selected day vs baseline</small></h3>
+      <div class="card-sub">Ranked by z-score, percentage difference and practical size.</div>
+      <div id="lcTopSignals" class="lc-story-list"></div>
+    </div>
+    <div class="card">
+      <h3>Life Load Index <small>context load, not diagnosis</small></h3>
+      <div class="card-sub">z(office) + z(commute + transport) + z(social) + z(exercise) - z(sleep).</div>
+      <div id="lcLifeLoad"></div>
+    </div>
+  </div>
+
+  <div class="cards cards-2">
+    <div class="card">
+      <h3>Life Timeline <small>daily composition view</small></h3>
+      <div class="card-sub" id="lcTimelineNote">Exact intraday start/end times are not present in this file.</div>
+      <div id="lcTimeline" class="lc-timeline"></div>
+      <div class="lc-badges" id="lcTimelineLegend"></div>
+    </div>
+    <div class="card">
+      <h3>Active Life Split <small>active context vs passive/context time</small></h3>
+      <div class="card-sub">Gym + walking + surfing + beach compared with office + commute + transport + home + social.</div>
+      <div id="lcActiveSplit"></div>
+    </div>
+  </div>
+
+  <div class="eb">What Was Different?</div>
+  <div id="lcDiffPanel" class="lc-story-list"></div>
+
+  <div class="eb">Time Portfolio</div>
+  <div class="card">
+    <h3>Where the day went <small>minutes and share of tracked category time</small></h3>
+    <div class="card-sub">Life Cycle categories can overlap, so this is a portfolio view rather than a strict 24-hour accounting.</div>
+    <div id="lcPortfolio" class="lc-portfolio"></div>
+  </div>
+
+  <div class="eb">Routine Fingerprint</div>
+  <div class="card">
+    <h3>Weekday by category <small>average minutes</small></h3>
+    <div class="card-sub">Rows are Life Cycle categories. Columns are weekday averages across the May daily file.</div>
+    <div id="lcRoutineFingerprint" class="lc-fingerprint"></div>
+  </div>
+
+  <div class="eb">Day Archetypes</div>
+  <div class="card">
+    <h3>Simple rule-based day types <small>selected day highlighted</small></h3>
+    <div id="lcArchetypeCards" class="lc-archetypes"></div>
+  </div>
+
+  <div class="eb">Time Trade-offs</div>
+  <div id="lcTradeoffs" class="lc-tradeoffs"></div>
+
+  <div class="eb">Context vs Body Signals</div>
+  <div class="warn-banner"><strong>Correlation view only.</strong> These charts show co-movement. They do not prove that a Life Cycle category caused a heart, sleep or workout signal.</div>
+  <div class="cards cards-2">
+    <div class="card">
+      <h3>Office vs HRV <small>daily May</small></h3>
+      <div class="cwrap h-md"><canvas id="lcDailyOfficeHRV"></canvas></div>
+    </div>
+    <div class="card">
+      <h3>Life Cycle sleep vs Apple sleep <small>daily May</small></h3>
+      <div class="cwrap h-md"><canvas id="lcSleepCompare"></canvas></div>
+    </div>
+    <div class="card">
+      <h3>Active context vs HR recovery <small>daily May</small></h3>
+      <div class="cwrap h-md"><canvas id="lcActiveHRR"></canvas></div>
+    </div>
+    <div class="card">
       <h3>Office time vs HRV <small>monthly scatter · 15 months</small></h3>
-      <div class="card-sub">Each dot = one month. Office min/day on X, HRV on Y. Hover for month.</div>
+      <div class="card-sub">Each dot = one month. Office min/day on X, HRV on Y.</div>
       <div class="cwrap h-md"><canvas id="lcOfficeHRV"></canvas></div>
     </div>
     <div class="card">
-      <h3>Time allocation <small>min/day · stacked bar</small></h3>
-      <div class="card-sub">Office · Social · Commute · Gym · Surfing. Yoga in pre-2026 months only.</div>
+      <h3>Time allocation <small>monthly min/day · stacked bar</small></h3>
+      <div class="card-sub">Office · Social · Commute · Gym · Surfing. Yoga exists in historical months only.</div>
       <div class="cwrap h-md"><canvas id="lcComposite"></canvas></div>
     </div>
   </div>
@@ -4725,12 +4867,8 @@ function show(id, btn) {
   window.scrollTo({ top: 0, behavior: 'smooth' });
 }
 
-// Start app
-document.addEventListener('DOMContentLoaded', init);
-</script>
-</body>
-</html>
-<script>
+// The daily workout extensions continue below.
+
 // ─────────────────────────────────────────────────────────────────────────
 // DAILY + ROLLING-7 HELPERS
 // ─────────────────────────────────────────────────────────────────────────
@@ -5124,4 +5262,417 @@ renderCharts = function() {
   _origRenderCharts();
   renderWorkoutsTab();
 };
+
+// ─────────────────────────────────────────────────────────────────────────
+// LIFE CYCLE COMMENTARY ENGINE
+// ─────────────────────────────────────────────────────────────────────────
+
+var LC_COLORS = {
+  sleep: '#1f6feb', home: '#64748b', office: '#d4a574', commute: '#5b9fbf', transport: '#58a6ff',
+  gym: '#bc8cff', walking: '#56d364', surfing: '#2dd4bf', beach: '#67e8f9', social: '#f472b6',
+  recovery: '#86efac', mindfulness: '#bbf7d0', shopping: '#8b949e'
+};
+
+var LC_CATEGORIES = [
+  { key:'sleep', label:'Sleep' }, { key:'home', label:'Home' }, { key:'office', label:'Office' },
+  { key:'commute', label:'Commute' }, { key:'transport', label:'Transport' }, { key:'gym', label:'Gym' },
+  { key:'walking', label:'Walking' }, { key:'surfing', label:'Surfing' }, { key:'beach', label:'Beach' },
+  { key:'social', label:'Social' }, { key:'recovery', label:'Recovery' }, { key:'mindfulness', label:'Mindfulness' },
+  { key:'shopping', label:'Shopping' }
+];
+
+var selectedLCDate = null;
+
+function num(v) { return typeof v === 'number' && isFinite(v) ? v : null; }
+function safeDate(date) { return new Date(date + 'T12:00:00'); }
+function dowIndex(date) { return safeDate(date).getDay(); }
+function mean(arr) { var x = arr.filter(function(v){ return num(v) !== null; }); return x.length ? x.reduce(function(a,b){return a+b;},0) / x.length : null; }
+function std(arr) {
+  var x = arr.filter(function(v){ return num(v) !== null; });
+  if (x.length < 5) return null;
+  var m = mean(x);
+  var variance = x.reduce(function(a,b){ return a + Math.pow(b - m, 2); }, 0) / x.length;
+  var s = Math.sqrt(variance);
+  return s > 0 ? s : null;
+}
+function sumVals(vals) { return vals.reduce(function(a,b){ return a + (num(b) || 0); }, 0); }
+function fmtHoursFromMinutes(mins) {
+  if (num(mins) === null) return '--';
+  if (Math.abs(mins) < 60) return Math.round(mins) + 'm';
+  var h = mins / 60;
+  return h.toFixed(Math.abs(h) >= 10 ? 0 : 1) + 'h';
+}
+function fmtMetric(v, unit, decimals) {
+  if (num(v) === null) return '--';
+  var d = decimals == null ? 1 : decimals;
+  if (unit === 'min') return fmtHoursFromMinutes(v);
+  if (unit === 'h') return v.toFixed(d) + 'h';
+  if (unit === 'steps') return Math.round(v).toLocaleString('en-AU');
+  if (unit === '%') return v.toFixed(d) + '%';
+  return (d === 0 ? Math.round(v) : v.toFixed(d)) + (unit ? ' ' + unit : '');
+}
+function deltaText(delta, unit, decimals) {
+  if (num(delta) === null) return '--';
+  var sign = delta > 0 ? '+' : '';
+  if (unit === 'min') return sign + fmtHoursFromMinutes(delta);
+  if (unit === 'steps') return sign + Math.round(delta).toLocaleString('en-AU');
+  return sign + fmtMetric(delta, unit, decimals);
+}
+function pctText(pct) {
+  if (num(pct) === null || !isFinite(pct)) return '';
+  return (pct > 0 ? '+' : '') + Math.round(pct * 100) + '%';
+}
+function getDaily(date) { return daily.find(function(d){ return d.date === date; }) || {}; }
+function getLC(date) { return dailyLC.find(function(d){ return d.date === date; }) || {}; }
+function lcValue(row, key) {
+  if (!row) return null;
+  if (key === 'commute_transport') return (num(row.commute) || 0) + (num(row.transport) || 0);
+  if (key === 'active_context') return (num(row.gym) || 0) + (num(row.walking) || 0) + (num(row.surfing) || 0) + (num(row.beach) || 0);
+  if (key === 'passive_context') return (num(row.office) || 0) + (num(row.commute) || 0) + (num(row.transport) || 0) + (num(row.home) || 0) + (num(row.social) || 0);
+  if (key === 'sleep' && row.sleep === 0) return null;
+  return num(row[key]);
+}
+function healthValue(row, key) { return row && num(row[key]) !== null ? row[key] : null; }
+function baselineFor(date, rows, getter) {
+  var dow = dowIndex(date);
+  var same = rows.filter(function(r){ return r.date !== date && dowIndex(r.date) === dow; }).map(getter).filter(function(v){ return num(v) !== null; });
+  if (same.length >= 2) return { value: mean(same), label: 'same-weekday average', n: same.length };
+  var full = rows.filter(function(r){ return r.date !== date; }).map(getter).filter(function(v){ return num(v) !== null; });
+  return { value: mean(full), label: 'full-period average', n: full.length };
+}
+function zFor(rows, getter, actual, date) {
+  var series = rows.filter(function(r){ return r.date !== date; }).map(getter).filter(function(v){ return num(v) !== null; });
+  var m = mean(series), s = std(series);
+  if (num(actual) === null || m === null || s === null) return null;
+  return (actual - m) / s;
+}
+function severityFromZ(z, delta, baseline, minDelta) {
+  var absZ = z === null ? 0 : Math.abs(z);
+  if (absZ >= 2.0) return 'extreme';
+  if (absZ >= 1.25) return 'unusual';
+  if (absZ >= 0.75) return 'notable';
+  var pct = baseline ? Math.abs(delta / baseline) : 0;
+  if (Math.abs(delta) >= minDelta && pct >= 0.25) return 'notable';
+  return 'normal';
+}
+function insightScore(z, delta, baseline, minDelta) {
+  var pct = baseline ? Math.abs(delta / baseline) : 0;
+  return (z === null ? 0 : Math.abs(z) * 2.0) + Math.min(2, pct * 2.2) + Math.min(1.2, Math.abs(delta) / Math.max(minDelta || 1, 1));
+}
+function buildInsight(opts) {
+  var actual = opts.actual;
+  if (num(actual) === null) return null;
+  var baseObj = opts.baseline;
+  if (!baseObj || num(baseObj.value) === null) return null;
+  var delta = actual - baseObj.value;
+  var pct = baseObj.value ? delta / baseObj.value : null;
+  var z = opts.z;
+  var severity = severityFromZ(z, delta, baseObj.value, opts.minDelta || 1);
+  var sparseHit = baseObj.value < (opts.sparseBase || 5) && actual > (opts.sparseActual || 20);
+  if (severity === 'normal' && !sparseHit) return null;
+  var direction = delta > 0 ? 'above' : 'below';
+  var highLow = delta > 0 ? 'above baseline' : 'below baseline';
+  var caveat = opts.caveat || (baseObj.label + ', n=' + baseObj.n);
+  return {
+    key: opts.key, label: opts.label, title: opts.label + ' was ' + highLow,
+    value: fmtMetric(actual, opts.unit, opts.decimals), baseline: fmtMetric(baseObj.value, opts.unit, opts.decimals),
+    delta: deltaText(delta, opts.unit, opts.decimals), pct: pctText(pct), rawActual: actual, rawBaseline: baseObj.value,
+    rawDelta: delta, z: z, direction: direction, severity: sparseHit && severity === 'normal' ? 'notable' : severity,
+    category: opts.category, unit: opts.unit, caveat: caveat,
+    sortScore: insightScore(z, delta, baseObj.value, opts.minDelta || 1) + (sparseHit ? 1.4 : 0)
+  };
+}
+function analyseDay(date) {
+  var d = getDaily(date), lc = getLC(date);
+  var insights = [];
+  function add(x) { if (x) insights.push(x); }
+  var healthDefs = [
+    { key:'sleep', label:'Apple sleep', unit:'h', minDelta:.6, decimals:1, category:'recovery' },
+    { key:'deep', label:'Deep sleep', unit:'h', minDelta:.25, decimals:2, category:'recovery' },
+    { key:'rem', label:'REM sleep', unit:'h', minDelta:.3, decimals:2, category:'recovery' },
+    { key:'rhr', label:'Resting heart rate', unit:'bpm', minDelta:2, decimals:0, category:'recovery' },
+    { key:'hrv', label:'HRV', unit:'ms', minDelta:6, decimals:0, category:'recovery' },
+    { key:'hrr', label:'HR recovery', unit:'bpm', minDelta:4, decimals:0, category:'recovery' },
+    { key:'vo2', label:'VO₂ max', unit:'', minDelta:1, decimals:1, category:'fitness' },
+    { key:'ex_min', label:'Exercise minutes', unit:'min', minDelta:22, decimals:0, category:'training' },
+    { key:'steps', label:'Steps', unit:'steps', minDelta:2200, decimals:0, category:'movement' },
+    { key:'walk_asym', label:'Walking asymmetry', unit:'%', minDelta:.8, decimals:2, category:'movement' }
+  ];
+  healthDefs.forEach(function(def){
+    var actual = healthValue(d, def.key);
+    var base = baselineFor(date, daily, function(r){ return healthValue(r, def.key); });
+    var z = zFor(daily, function(r){ return healthValue(r, def.key); }, actual, date);
+    add(buildInsight(Object.assign({}, def, { actual: actual, baseline: base, z: z, caveat: base.label + ', n=' + base.n })));
+  });
+  var lcDefs = [
+    { key:'sleep', label:'Life Cycle sleep', unit:'min', minDelta:45, category:'lifecycle' },
+    { key:'office', label:'Office time', unit:'min', minDelta:90, category:'lifecycle' },
+    { key:'home', label:'Home time', unit:'min', minDelta:180, category:'lifecycle' },
+    { key:'commute', label:'Commute time', unit:'min', minDelta:45, category:'lifecycle' },
+    { key:'transport', label:'Transport time', unit:'min', minDelta:45, category:'lifecycle' },
+    { key:'social', label:'Social time', unit:'min', minDelta:45, category:'lifecycle', sparseBase:10, sparseActual:30 },
+    { key:'gym', label:'Gym time', unit:'min', minDelta:35, category:'training' },
+    { key:'walking', label:'Walking time', unit:'min', minDelta:35, category:'movement' },
+    { key:'beach', label:'Beach time', unit:'min', minDelta:30, category:'lifecycle', sparseBase:8, sparseActual:20 },
+    { key:'surfing', label:'Surfing time', unit:'min', minDelta:20, category:'movement', sparseBase:5, sparseActual:15 },
+    { key:'recovery', label:'Recovery time', unit:'min', minDelta:15, category:'recovery', sparseBase:3, sparseActual:8 },
+    { key:'mindfulness', label:'Mindfulness time', unit:'min', minDelta:10, category:'recovery', sparseBase:3, sparseActual:8 },
+    { key:'shopping', label:'Shopping time', unit:'min', minDelta:20, category:'lifecycle', sparseBase:6, sparseActual:15 }
+  ];
+  lcDefs.forEach(function(def){
+    var actual = lcValue(lc, def.key);
+    var base = baselineFor(date, dailyLC, function(r){ return lcValue(r, def.key); });
+    var z = zFor(dailyLC, function(r){ return lcValue(r, def.key); }, actual, date);
+    add(buildInsight(Object.assign({}, def, { actual: actual, baseline: base, z: z, caveat: base.label + ', n=' + base.n })));
+  });
+  var combinedBase = baselineFor(date, dailyLC, function(r){ return lcValue(r, 'commute_transport'); });
+  add(buildInsight({ key:'commute_transport', label:'Commute + transport', unit:'min', minDelta:60, category:'lifecycle', actual:lcValue(lc,'commute_transport'), baseline:combinedBase, z:zFor(dailyLC, function(r){return lcValue(r,'commute_transport');}, lcValue(lc,'commute_transport'), date), caveat:combinedBase.label + ', n=' + combinedBase.n }));
+  insights.sort(function(a,b){ return b.sortScore - a.sortScore; });
+  var tags = classifyDay(date, insights);
+  return { date: date, daily: d, lc: lc, insights: insights, tags: tags, headline: headlineFor(date, tags, insights) };
+}
+function classifyDay(date, insights) {
+  var d = getDaily(date), lc = getLC(date);
+  function has(key, dir) { return insights.some(function(i){ return i.key === key && (!dir || i.direction === dir) && i.severity !== 'normal'; }); }
+  var tags = [];
+  if ((num(lc.surfing) || 0) > 0) tags.push('Surf day');
+  if (has('office','above') || (num(lc.office) || 0) >= 480) tags.push('Work-heavy');
+  if (has('home','above')) tags.push('Home-heavy');
+  if (has('social','above')) tags.push('Social-heavy');
+  if (has('ex_min','above') || has('gym','above')) tags.push('Training-heavy');
+  if (has('commute_transport','above')) tags.push('Commute-heavy');
+  if (has('walking','above') || has('steps','above') || has('surfing','above')) tags.push('Movement-heavy');
+  var sleepLow = has('sleep','below') || has('Life Cycle sleep','below');
+  var hrvLow = has('hrv','below');
+  var sleepHigh = has('sleep','above') || has('Life Cycle sleep','above');
+  var hrvHigh = has('hrv','above');
+  if (sleepLow || hrvLow) tags.push('Recovery-light');
+  if (sleepHigh && hrvHigh) tags.push('Recovery-positive');
+  var lcUnusual = insights.filter(function(i){ return i.category === 'lifecycle' && (i.severity === 'unusual' || i.severity === 'extreme'); }).length;
+  if (lcUnusual >= 3) tags.push('Routine-breaker');
+  if (!tags.length) tags.push('Routine day');
+  return tags.slice(0, 6);
+}
+function headlineFor(date, tags, insights) {
+  var top = insights[0];
+  if (tags.indexOf('Surf day') >= 0 && tags.indexOf('Movement-heavy') >= 0) return 'A surf-and-walk day with elevated movement.';
+  if (tags.indexOf('Work-heavy') >= 0 && tags.indexOf('Recovery-light') >= 0) return 'A work-heavy day with low recovery margin.';
+  if (tags.indexOf('Training-heavy') >= 0 && tags.indexOf('Recovery-positive') >= 0) return 'A training-heavy day with recovery support.';
+  if (tags.indexOf('Social-heavy') >= 0 && tags.indexOf('Recovery-light') >= 0) return 'A social-heavy day with compressed recovery.';
+  if (tags.indexOf('Movement-heavy') >= 0) return 'A high-output day with unusually heavy movement.';
+  if (tags.indexOf('Home-heavy') >= 0) return 'A home-base day with a quieter external footprint.';
+  if (top) return top.label + ' shaped the day more than usual.';
+  return 'A mostly routine day with no major signal breaking from baseline.';
+}
+function primaryArchetype(date) {
+  var d = getDaily(date), lc = getLC(date);
+  var active = lcValue(lc, 'active_context') || 0;
+  if ((num(lc.surfing) || 0) > 0) return 'Surf day';
+  if ((num(lc.office) || 0) >= 480) return 'Office grind';
+  if ((num(lc.social) || 0) >= 120) return 'Social day';
+  if ((num(d.ex_min) || 0) >= 105 || active >= 180) return 'Training day';
+  if ((num(lc.sleep) || 0) >= 540 || (num(lc.recovery) || 0) > 0) return 'Recovery day';
+  if ((num(d.steps) || 0) >= 14000 || (num(lc.walking) || 0) >= 110) return 'High movement day';
+  if ((num(lc.home) || 0) >= 1100) return 'Home base';
+  return 'Mixed / unusual day';
+}
+function populateLCDateSelect() {
+  var sel = document.getElementById('lcDateSelect');
+  if (!sel) return null;
+  if (!sel.options.length) {
+    dailyLC.forEach(function(row){
+      var opt = document.createElement('option');
+      opt.value = row.date;
+      opt.textContent = safeDate(row.date).toLocaleDateString('en-AU', { weekday:'short', day:'numeric', month:'short' });
+      sel.appendChild(opt);
+    });
+    selectedLCDate = dailyLC[dailyLC.length - 1].date;
+    sel.value = selectedLCDate;
+    sel.onchange = function(){ selectedLCDate = this.value; renderLifeCycleEngine(); };
+  }
+  return sel.value || selectedLCDate;
+}
+function cardForInsight(i) {
+  var ztxt = i.z === null ? '' : ' · z ' + (i.z > 0 ? '+' : '') + i.z.toFixed(1);
+  var pct = i.pct ? ' · ' + i.pct : '';
+  return '<div class="lc-insight ' + i.severity + '">' +
+    '<h4>' + i.title + '</h4>' +
+    '<div class="metric">' + i.value + ' vs ' + i.baseline + ' baseline, ' + i.delta + pct + ztxt + '</div>' +
+    '<div class="caveat">' + i.caveat + '</div>' +
+  '</div>';
+}
+function setHTML(id, html) { var el = document.getElementById(id); if (el) el.innerHTML = html; }
+function setText(id, txt) { var el = document.getElementById(id); if (el) el.textContent = txt; }
+function findTop(insights, keys, cats) {
+  return insights.find(function(i){
+    return (keys && keys.indexOf(i.key) >= 0) || (cats && cats.indexOf(i.category) >= 0);
+  }) || null;
+}
+function summaryLine(i) {
+  if (!i) return 'No meaningful break from baseline.';
+  return i.value + ' vs ' + i.baseline + ', ' + i.delta;
+}
+function renderLifeCycleEngine() {
+  var date = populateLCDateSelect();
+  if (!date) return;
+  var a = analyseDay(date);
+  setText('lcHeadline', a.headline);
+  setText('lcType', a.tags[0]);
+  setText('lcTypeDetail', safeDate(date).toLocaleDateString('en-AU', { weekday:'long', day:'numeric', month:'long' }) + ' · ' + a.tags.slice(1).join(' · '));
+  setHTML('lcBadges', a.tags.map(function(t, idx){ return '<span class="lc-badge ' + (idx < 2 ? 'hot' : 'cool') + '">' + t + '</span>'; }).join(''));
+  var lcDriver = findTop(a.insights, null, ['lifecycle']);
+  var training = findTop(a.insights, ['ex_min','gym','walking','surfing','steps'], ['training','movement']);
+  var recovery = findTop(a.insights, ['sleep','deep','rem','rhr','hrv','hrr','recovery','mindfulness'], ['recovery']);
+  setText('lcDriver', lcDriver ? lcDriver.title.replace(' was ', ': ') : 'No Life Cycle category materially moved.');
+  setText('lcTraining', training ? training.title.replace(' was ', ': ') : 'Training load was near baseline.');
+  setText('lcRecovery', recovery ? recovery.title.replace(' was ', ': ') : 'Recovery signals were near baseline or unavailable.');
+  var top3 = a.insights.slice(0, 3);
+  setHTML('lcTopSignals', top3.length ? top3.map(cardForInsight).join('') : '<div class="lc-empty">No meaningful unusual signals for this day.</div>');
+  setHTML('lcDiffPanel', a.insights.slice(0, 12).map(cardForInsight).join('') || '<div class="lc-empty">No meaningful differences met the display threshold.</div>');
+  renderLCLifeLoad(date);
+  renderLCTimeline(date);
+  renderLCPortfolio(date);
+  renderRoutineFingerprint(date);
+  renderArchetypes(date);
+  renderTradeoffs(date);
+  renderActiveSplit(date);
+  renderLCContextCharts(date);
+}
+function renderLCLifeLoad(date) {
+  var lc = getLC(date), d = getDaily(date);
+  var parts = [
+    { label:'Office', z:zFor(dailyLC, function(r){return lcValue(r,'office');}, lcValue(lc,'office'), date), val:fmtHoursFromMinutes(lcValue(lc,'office')) },
+    { label:'Commute + transport', z:zFor(dailyLC, function(r){return lcValue(r,'commute_transport');}, lcValue(lc,'commute_transport'), date), val:fmtHoursFromMinutes(lcValue(lc,'commute_transport')) },
+    { label:'Social', z:zFor(dailyLC, function(r){return lcValue(r,'social');}, lcValue(lc,'social'), date), val:fmtHoursFromMinutes(lcValue(lc,'social')) },
+    { label:'Exercise', z:zFor(daily, function(r){return healthValue(r,'ex_min');}, healthValue(d,'ex_min'), date), val:fmtHoursFromMinutes(healthValue(d,'ex_min')) },
+    { label:'Sleep offset', z:zFor(daily, function(r){return healthValue(r,'sleep');}, healthValue(d,'sleep'), date), val:fmtMetric(healthValue(d,'sleep'), 'h', 1), invert:true }
+  ];
+  if (parts.some(function(p){ return p.z === null; })) {
+    setHTML('lcLifeLoad', '<div class="lc-empty">Index not calculated because one or more required signals are missing for this date. Components present: ' + parts.map(function(p){ return p.label + ' ' + p.val; }).join(' · ') + '</div>');
+    return;
+  }
+  var score = parts.reduce(function(a,p){ return a + (p.invert ? -p.z : p.z); }, 0);
+  var band = score >= 1.25 ? 'High' : (score <= -1.25 ? 'Low' : 'Normal');
+  var rows = parts.map(function(p){ return '<div class="metric">' + p.label + ': ' + p.val + ' · z ' + (p.z > 0 ? '+' : '') + p.z.toFixed(1) + (p.invert ? ' subtracted' : '') + '</div>'; }).join('');
+  setHTML('lcLifeLoad', '<div style="font-family:Libre Baskerville,Georgia,serif;font-size:34px;color:var(--rust);margin:4px 0">' + band + '</div><div class="card-sub">Score ' + (score > 0 ? '+' : '') + score.toFixed(1) + '</div>' + rows);
+}
+function lcComposition(date) {
+  var lc = getLC(date);
+  var cats = LC_CATEGORIES.map(function(c){ return { key:c.key, label:c.label, value:lcValue(lc,c.key) || 0, color:LC_COLORS[c.key] }; })
+    .filter(function(c){ return c.value > 0; });
+  var total = cats.reduce(function(a,c){ return a + c.value; }, 0);
+  cats.sort(function(a,b){ return b.value - a.value; });
+  return { cats:cats, total:total };
+}
+function renderLCTimeline(date) {
+  var comp = lcComposition(date);
+  setText('lcTimelineNote', 'Exact intraday Life Cycle start/end times are not present in this file. Showing daily composition instead.');
+  if (!comp.total) { setHTML('lcTimeline', ''); setHTML('lcTimelineLegend','<span class="lc-badge">No Life Cycle minutes recorded</span>'); return; }
+  setHTML('lcTimeline', comp.cats.map(function(c){ return '<span title="' + c.label + ' ' + fmtHoursFromMinutes(c.value) + '" style="width:' + (c.value / comp.total * 100).toFixed(2) + '%;background:' + c.color + '"></span>'; }).join(''));
+  setHTML('lcTimelineLegend', comp.cats.slice(0, 8).map(function(c){ return '<span class="lc-badge"><span class="lc-dot" style="background:' + c.color + '"></span>' + c.label + ' ' + fmtHoursFromMinutes(c.value) + '</span>'; }).join(''));
+}
+function renderLCPortfolio(date) {
+  var comp = lcComposition(date);
+  if (!comp.total) { setHTML('lcPortfolio', '<div class="lc-empty">No Life Cycle minutes recorded.</div>'); return; }
+  setHTML('lcPortfolio', comp.cats.map(function(c){
+    var pct = c.value / comp.total;
+    return '<div class="lc-port-card"><div class="name"><span class="lc-dot" style="background:' + c.color + '"></span>' + c.label + '</div>' +
+      '<div class="mins">' + fmtHoursFromMinutes(c.value) + '</div><div class="pct">' + Math.round(pct*100) + '% of tracked category time</div>' +
+      '<div class="lc-mini-bar"><span style="width:' + (pct*100).toFixed(1) + '%;background:' + c.color + '"></span></div></div>';
+  }).join(''));
+}
+function renderRoutineFingerprint(date) {
+  var dows = ['Sun','Mon','Tue','Wed','Thu','Fri','Sat'];
+  var html = '<div class="lc-fp-grid"><div></div>' + dows.map(function(d){ return '<div class="lc-fp-cell colhdr">' + d + '</div>'; }).join('');
+  LC_CATEGORIES.forEach(function(cat){
+    var values = dows.map(function(_, idx){
+      var vals = dailyLC.filter(function(r){ return dowIndex(r.date) === idx; }).map(function(r){ return lcValue(r, cat.key); }).filter(function(v){ return num(v) !== null; });
+      return mean(vals) || 0;
+    });
+    var mx = Math.max.apply(null, values.concat([1]));
+    html += '<div class="lc-fp-cell rowhdr"><span class="lc-dot" style="background:' + LC_COLORS[cat.key] + '"></span>&nbsp;' + cat.label + '</div>';
+    values.forEach(function(v){
+      var opacity = 0.12 + (v / mx) * 0.72;
+      html += '<div class="lc-fp-cell" style="background:rgba(91,159,191,' + opacity.toFixed(2) + ')">' + Math.round(v) + '</div>';
+    });
+  });
+  html += '</div>';
+  setHTML('lcRoutineFingerprint', html);
+}
+function renderArchetypes(date) {
+  var counts = {};
+  dailyLC.forEach(function(r){ var a = primaryArchetype(r.date); counts[a] = (counts[a] || 0) + 1; });
+  var selected = primaryArchetype(date);
+  var order = ['Office grind','Training day','Surf day','Social day','Home base','Recovery day','High movement day','Mixed / unusual day'];
+  setHTML('lcArchetypeCards', order.map(function(k){
+    return '<div class="lc-arch ' + (k === selected ? 'selected' : '') + '"><div class="n">' + (counts[k] || 0) + '</div><div class="label">' + k + (k === selected ? ' · selected' : '') + '</div></div>';
+  }).join(''));
+}
+function tradeoffCard(title, leftLabel, leftActual, leftBase, rightLabel, rightActual, rightBase) {
+  var leftDelta = leftActual - leftBase, rightDelta = rightActual - rightBase;
+  return '<div class="lc-insight"><h4>' + title + '</h4>' +
+    '<div class="metric">' + leftLabel + ': ' + fmtHoursFromMinutes(leftActual) + ' vs ' + fmtHoursFromMinutes(leftBase) + ', ' + deltaText(leftDelta, 'min', 0) + '</div>' +
+    '<div class="metric">' + rightLabel + ': ' + fmtHoursFromMinutes(rightActual) + ' vs ' + fmtHoursFromMinutes(rightBase) + ', ' + deltaText(rightDelta, 'min', 0) + '</div>' +
+  '</div>';
+}
+function renderTradeoffs(date) {
+  var lc = getLC(date), d = getDaily(date);
+  function baseLC(key){ return baselineFor(date, dailyLC, function(r){return lcValue(r,key);}).value || 0; }
+  function baseH(key){ return (baselineFor(date, daily, function(r){return healthValue(r,key);}).value || 0) * (key === 'sleep' ? 60 : 1); }
+  var sleepM = healthValue(d,'sleep') !== null ? healthValue(d,'sleep') * 60 : lcValue(lc,'sleep') || 0;
+  var sleepBase = healthValue(d,'sleep') !== null ? baseH('sleep') : baseLC('sleep');
+  setHTML('lcTradeoffs', [
+    tradeoffCard('Office time versus sleep', 'Office', lcValue(lc,'office') || 0, baseLC('office'), 'Sleep', sleepM, sleepBase),
+    tradeoffCard('Commute/transport versus home', 'Commute + transport', lcValue(lc,'commute_transport') || 0, baseLC('commute_transport'), 'Home', lcValue(lc,'home') || 0, baseLC('home')),
+    tradeoffCard('Social time versus recovery', 'Social', lcValue(lc,'social') || 0, baseLC('social'), 'Recovery + mindfulness', (lcValue(lc,'recovery') || 0) + (lcValue(lc,'mindfulness') || 0), baseLC('recovery') + baseLC('mindfulness')),
+    tradeoffCard('Active context versus sleep', 'Gym + walking + surfing + beach', lcValue(lc,'active_context') || 0, baseLC('active_context'), 'Sleep', sleepM, sleepBase)
+  ].join(''));
+}
+function renderActiveSplit(date) {
+  var lc = getLC(date);
+  var active = lcValue(lc,'active_context') || 0;
+  var passive = lcValue(lc,'passive_context') || 0;
+  var total = active + passive;
+  if (!total) { setHTML('lcActiveSplit','<div class="lc-empty">No active or passive Life Cycle context recorded.</div>'); return; }
+  var activePct = active / total * 100, passivePct = passive / total * 100;
+  setHTML('lcActiveSplit', '<div class="lc-timeline" style="height:28px"><span style="width:' + activePct.toFixed(1) + '%;background:var(--sage)" title="Active context"></span><span style="width:' + passivePct.toFixed(1) + '%;background:var(--slate)" title="Passive/context"></span></div>' +
+    '<div class="lc-badges"><span class="lc-badge hot">Active ' + fmtHoursFromMinutes(active) + ' · ' + Math.round(activePct) + '%</span><span class="lc-badge cool">Passive/context ' + fmtHoursFromMinutes(passive) + ' · ' + Math.round(passivePct) + '%</span></div>');
+}
+function renderLCContextCharts(date) {
+  renderLCDailyOfficeHRV(date);
+  renderLCSleepCompare(date);
+  renderLCActiveHRR(date);
+}
+function selectedPointRadius(rowDate, selected) { return rowDate === selected ? 7 : 4; }
+function renderLCDailyOfficeHRV(selected) {
+  var ctx = document.getElementById('lcDailyOfficeHRV') ? document.getElementById('lcDailyOfficeHRV').getContext('2d') : null;
+  if (!ctx) return; destroyChart('lcDailyOfficeHRV');
+  var pts = dailyLC.map(function(lc){ var d = getDaily(lc.date); return healthValue(d,'hrv') !== null ? { x:lcValue(lc,'office') || 0, y:healthValue(d,'hrv'), date:lc.date } : null; }).filter(Boolean);
+  charts['lcDailyOfficeHRV'] = new Chart(ctx, { type:'scatter', data:{ datasets:[{ label:'Office vs HRV', data:pts, backgroundColor:pts.map(function(p){return p.date===selected?'#d4a574':'rgba(91,159,191,.65)';}), borderColor:'#5b9fbf', pointRadius:pts.map(function(p){return selectedPointRadius(p.date, selected);}) }]}, options:{ responsive:true, maintainAspectRatio:false, plugins:{ legend:{display:false}, tooltip:{callbacks:{label:function(c){return c.raw.date + ': office ' + fmtHoursFromMinutes(c.parsed.x) + ', HRV ' + c.parsed.y + ' ms';}}}}, scales:{ x:{ title:{display:true,text:'Office minutes',color:'#8b949e'}, ticks:{color:'#8b949e'}, grid:{color:'#30363d'} }, y:{ title:{display:true,text:'HRV ms',color:'#8b949e'}, ticks:{color:'#8b949e'}, grid:{color:'#30363d'} } } } });
+}
+function renderLCSleepCompare(selected) {
+  var ctx = document.getElementById('lcSleepCompare') ? document.getElementById('lcSleepCompare').getContext('2d') : null;
+  if (!ctx) return; destroyChart('lcSleepCompare');
+  var pts = dailyLC.map(function(lc){ var d = getDaily(lc.date); var slc = lcValue(lc,'sleep'); return slc !== null && healthValue(d,'sleep') !== null ? { x:slc/60, y:healthValue(d,'sleep'), date:lc.date } : null; }).filter(Boolean);
+  charts['lcSleepCompare'] = new Chart(ctx, { type:'scatter', data:{ datasets:[{ label:'LC sleep vs Apple sleep', data:pts, backgroundColor:pts.map(function(p){return p.date===selected?'#d4a574':'rgba(31,111,235,.65)';}), borderColor:'#1f6feb', pointRadius:pts.map(function(p){return selectedPointRadius(p.date, selected);}) }]}, options:{ responsive:true, maintainAspectRatio:false, plugins:{ legend:{display:false}, tooltip:{callbacks:{label:function(c){return c.raw.date + ': LC ' + c.parsed.x.toFixed(1) + 'h, Apple ' + c.parsed.y.toFixed(1) + 'h';}}}}, scales:{ x:{ title:{display:true,text:'Life Cycle sleep hours',color:'#8b949e'}, ticks:{color:'#8b949e'}, grid:{color:'#30363d'} }, y:{ title:{display:true,text:'Apple sleep hours',color:'#8b949e'}, ticks:{color:'#8b949e'}, grid:{color:'#30363d'} } } } });
+}
+function renderLCActiveHRR(selected) {
+  var ctx = document.getElementById('lcActiveHRR') ? document.getElementById('lcActiveHRR').getContext('2d') : null;
+  if (!ctx) return; destroyChart('lcActiveHRR');
+  var pts = dailyLC.map(function(lc){ var d = getDaily(lc.date); return healthValue(d,'hrr') !== null ? { x:lcValue(lc,'active_context') || 0, y:healthValue(d,'hrr'), date:lc.date } : null; }).filter(Boolean);
+  charts['lcActiveHRR'] = new Chart(ctx, { type:'scatter', data:{ datasets:[{ label:'Active context vs HRR', data:pts, backgroundColor:pts.map(function(p){return p.date===selected?'#d4a574':'rgba(86,211,100,.65)';}), borderColor:'#56d364', pointRadius:pts.map(function(p){return selectedPointRadius(p.date, selected);}) }]}, options:{ responsive:true, maintainAspectRatio:false, plugins:{ legend:{display:false}, tooltip:{callbacks:{label:function(c){return c.raw.date + ': active ' + fmtHoursFromMinutes(c.parsed.x) + ', HRR ' + c.parsed.y + ' bpm';}}}}, scales:{ x:{ title:{display:true,text:'Active context minutes',color:'#8b949e'}, ticks:{color:'#8b949e'}, grid:{color:'#30363d'} }, y:{ title:{display:true,text:'HR recovery bpm',color:'#8b949e'}, ticks:{color:'#8b949e'}, grid:{color:'#30363d'} } } } });
+}
+
+// Add the Life Cycle commentary engine after the existing chart pass.
+var _renderChartsBeforeLifeCycle = renderCharts;
+renderCharts = function() {
+  _renderChartsBeforeLifeCycle();
+  renderLifeCycleEngine();
+};
+
+
+// Start app
+document.addEventListener('DOMContentLoaded', init);
 </script>
+</body>
+</html>
