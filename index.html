@@ -19,13 +19,9 @@ html{scroll-behavior:smooth}
 html,body{background:var(--bg);color:var(--ink);font-family:'IBM Plex Sans',system-ui,sans-serif;line-height:1.55}
 .wrap{max-width:1180px;margin:0 auto;padding:18px 20px 60px}
 .mono{font-family:'IBM Plex Mono',monospace}
-
-/* MINI NAV */
 .minibar{position:sticky;top:0;z-index:9;background:rgba(11,19,34,.93);border-bottom:1px solid var(--line);margin:0 -20px 26px;padding:0 20px;overflow-x:auto;white-space:nowrap}
 .minibar a{display:inline-block;font-family:'IBM Plex Mono',monospace;font-size:10.5px;letter-spacing:.14em;color:var(--muted);text-decoration:none;padding:11px 12px;text-transform:uppercase}
 .minibar a:hover{color:var(--amber)}
-
-/* HERO */
 .hero{background:var(--panel);border:1px solid var(--line);border-radius:10px;padding:34px 34px 0;margin-bottom:40px;overflow:hidden}
 .hero-top{display:flex;justify-content:space-between;gap:24px;flex-wrap:wrap}
 .hero-eye{font-family:'IBM Plex Mono',monospace;font-size:11px;letter-spacing:.22em;color:var(--muted);text-transform:uppercase;margin-bottom:14px}
@@ -52,8 +48,6 @@ html,body{background:var(--bg);color:var(--ink);font-family:'IBM Plex Sans',syst
 .hc-prose p{margin-bottom:12px}
 .hc-prose strong{color:var(--ink);font-weight:600}
 .v-amber{color:var(--amber)} .v-slate{color:var(--slate)} .v-plum{color:var(--plum)}
-
-/* SECTIONS */
 .sec{margin-bottom:48px}
 .sec-head{display:flex;justify-content:space-between;align-items:baseline;gap:16px;flex-wrap:wrap;margin-bottom:6px}
 .sec-t{font-family:'Barlow Condensed',sans-serif;font-weight:600;font-size:26px;letter-spacing:.02em;text-transform:uppercase}
@@ -67,8 +61,6 @@ html,body{background:var(--bg);color:var(--ink);font-family:'IBM Plex Sans',syst
 .cwrap canvas{position:absolute;inset:0}
 .cwrap-lg{height:300px;position:relative}
 .cwrap-lg canvas{position:absolute;inset:0}
-
-/* DEVIATION BOARD */
 .dev-row{display:grid;grid-template-columns:175px 1fr 95px 130px 95px 26px;align-items:center;gap:14px;background:var(--panel);border:1px solid var(--line);border-radius:6px;padding:10px 16px;margin-bottom:6px;cursor:pointer}
 .dev-row:hover{background:var(--panel2)}
 .dr-name{font-size:13.5px;font-weight:600}
@@ -86,13 +78,9 @@ html,body{background:var(--bg);color:var(--ink);font-family:'IBM Plex Sans',syst
 .exp-inner{height:260px;position:relative}
 .exp-inner canvas{position:absolute;inset:0}
 .exp-note{font-family:'IBM Plex Mono',monospace;font-size:10.5px;color:var(--muted);margin-top:10px}
-
-/* COMPOSER */
 .chips{display:flex;gap:6px;flex-wrap:wrap;margin-bottom:14px}
 .chip{font-family:'IBM Plex Mono',monospace;font-size:11px;padding:5px 12px;border-radius:4px;border:1px solid var(--line);background:none;color:var(--ink2);cursor:pointer}
 .chip.active{color:var(--amber);border-color:var(--amber)}
-
-/* EPISODES */
 table{width:100%;border-collapse:collapse;font-size:12.5px}
 th{font-family:'IBM Plex Mono',monospace;font-size:10px;letter-spacing:.1em;text-transform:uppercase;color:var(--muted);text-align:right;padding:8px 10px;border-bottom:1px solid var(--line)}
 th:first-child{text-align:left}
@@ -103,8 +91,6 @@ tr.clickable:hover td{background:var(--panel2)}
 tr.note-row td{font-size:11px;font-style:italic;color:var(--muted);border-bottom:1px solid var(--line);padding-top:0;text-align:left}
 .ep-active{color:var(--bad);font-weight:600}
 .ep-resolved{color:var(--good)}
-
-/* DAY INSPECTOR */
 .di-head{display:flex;align-items:center;gap:14px;flex-wrap:wrap;margin-bottom:14px}
 .di-title{font-family:'Barlow Condensed',sans-serif;font-weight:700;font-size:30px}
 .di-btn{font-family:'IBM Plex Mono',monospace;font-size:13px;background:var(--panel2);border:1px solid var(--line);color:var(--ink2);border-radius:4px;padding:6px 14px;cursor:pointer}
@@ -132,8 +118,6 @@ tr.note-row td{font-size:11px;font-style:italic;color:var(--muted);border-bottom
 .dot.d-bad{background:var(--bad)}
 .dot.sel{border-color:var(--ink)}
 .dots-label{font-family:'IBM Plex Mono',monospace;font-size:10px;color:var(--muted);margin-right:8px}
-
-/* FIELD NOTES */
 .notes-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(255px,1fr));gap:14px}
 .note-card{background:var(--panel);border:1px solid var(--line);border-radius:8px;padding:18px}
 .nc-tag{font-family:'IBM Plex Mono',monospace;font-size:9px;letter-spacing:.2em;text-transform:uppercase;margin-bottom:10px}
@@ -141,15 +125,11 @@ tr.note-row td{font-size:11px;font-style:italic;color:var(--muted);border-bottom
 .nc-big{font-family:'Barlow Condensed',sans-serif;font-weight:700;font-size:34px;line-height:1.05;margin-bottom:8px}
 .nc-txt{font-size:12.5px;color:var(--ink2)}
 .nc-txt b{color:var(--ink)}
-
-/* WEEK STRIP */
 .week-grid{display:grid;grid-template-columns:1fr 1fr;gap:16px}
 .wk-rows{display:flex;flex-direction:column;gap:8px}
 .wk-row{display:flex;justify-content:space-between;align-items:baseline;font-size:13px;border-bottom:1px solid rgba(36,52,84,.5);padding-bottom:7px}
 .wk-row .wl{color:var(--ink2)}
 .wk-row .wv{font-family:'IBM Plex Mono',monospace;font-size:12px}
-
-/* SCANS */
 .grid3{display:grid;grid-template-columns:1fr 1fr 1fr;gap:16px;margin-bottom:16px}
 .tbl-scroll{overflow-x:auto}
 .tbl-scroll table{min-width:780px}
@@ -157,14 +137,11 @@ tr.note-row td{font-size:11px;font-style:italic;color:var(--muted);border-bottom
 .tr-low{color:var(--bad);border:1px solid rgba(217,100,89,.4)}
 .tr-med{color:var(--amber);border:1px solid rgba(232,163,61,.4)}
 .tr-high{color:var(--good);border:1px solid rgba(111,174,106,.4)}
-
-/* VALIDATION FOOTER */
 .foot{border-top:1px solid var(--line);padding-top:18px;font-family:'IBM Plex Mono',monospace;font-size:11px;color:var(--muted);line-height:1.9}
 .foot .fail{color:var(--bad)}
 .foot .pass{color:var(--good)}
 .foot .warn{color:var(--amber)}
 .fail-panel{background:rgba(217,100,89,.08);border:1px solid rgba(217,100,89,.5);border-radius:6px;padding:14px;margin-bottom:10px;color:var(--bad)}
-
 @media(max-width:880px){
   .hero{padding:24px 20px 0}
   .hero-rule,.hero-grid{margin:0 -20px}
@@ -179,10 +156,8 @@ tr.note-row td{font-size:11px;font-style:italic;color:var(--muted);border-bottom
 }
 </style>
 </head>
-
 <body>
 <div class="wrap">
-
 <div class="minibar" id="minibar">
   <a href="javascript:void(0)" data-scroll="top">Signals</a>
   <a href="javascript:void(0)" data-scroll="s-board">Board</a>
@@ -194,8 +169,6 @@ tr.note-row td{font-size:11px;font-style:italic;color:var(--muted);border-bottom
   <a href="javascript:void(0)" data-scroll="s-week">This week</a>
   <a href="javascript:void(0)" data-scroll="s-scans">Scans</a>
 </div>
-
-<!-- HERO -->
 <div class="hero" id="top">
   <div class="hero-top">
     <div>
@@ -231,8 +204,6 @@ tr.note-row td{font-size:11px;font-style:italic;color:var(--muted);border-bottom
     </div>
   </div>
 </div>
-
-<!-- DEVIATION BOARD -->
 <div class="sec" id="s-board">
   <div class="sec-head">
     <div class="sec-t">Deviation board</div>
@@ -246,8 +217,6 @@ tr.note-row td{font-size:11px;font-style:italic;color:var(--muted);border-bottom
     <div class="cwrap"><canvas id="composerChart"></canvas></div>
   </div>
 </div>
-
-<!-- EPISODES -->
 <div class="sec" id="s-episodes">
   <div class="sec-head">
     <div class="sec-t">Disruption episodes</div>
@@ -260,8 +229,6 @@ tr.note-row td{font-size:11px;font-style:italic;color:var(--muted);border-bottom
   </div>
   <div class="card" id="epTableWrap"></div>
 </div>
-
-<!-- DAY INSPECTOR -->
 <div class="sec" id="s-inspector">
   <div class="sec-head">
     <div class="sec-t">Day inspector</div>
@@ -283,8 +250,6 @@ tr.note-row td{font-size:11px;font-style:italic;color:var(--muted);border-bottom
     <div class="dots"><span class="dots-label">SERIES</span><span id="diDots"></span></div>
   </div>
 </div>
-
-<!-- FIELD NOTES -->
 <div class="sec" id="s-notes">
   <div class="sec-head">
     <div class="sec-t">Field notes</div>
@@ -292,8 +257,6 @@ tr.note-row td{font-size:11px;font-style:italic;color:var(--muted);border-bottom
   </div>
   <div class="notes-grid" id="notesGrid"></div>
 </div>
-
-<!-- TRAINING -->
 <div class="sec" id="s-training">
   <div class="sec-head">
     <div class="sec-t">Training load</div>
@@ -311,8 +274,6 @@ tr.note-row td{font-size:11px;font-style:italic;color:var(--muted);border-bottom
     </div>
   </div>
 </div>
-
-<!-- SLEEP -->
 <div class="sec" id="s-sleep">
   <div class="sec-head">
     <div class="sec-t">Sleep architecture</div>
@@ -323,8 +284,6 @@ tr.note-row td{font-size:11px;font-style:italic;color:var(--muted);border-bottom
     <div class="cwrap-lg"><canvas id="sleepChart"></canvas></div>
   </div>
 </div>
-
-<!-- THIS WEEK -->
 <div class="sec" id="s-week">
   <div class="sec-head">
     <div class="sec-t">This week vs baseline</div>
@@ -342,8 +301,6 @@ tr.note-row td{font-size:11px;font-style:italic;color:var(--muted);border-bottom
     </div>
   </div>
 </div>
-
-<!-- SCANS -->
 <div class="sec" id="s-scans">
   <div class="sec-head">
     <div class="sec-t">Scan series</div>
@@ -367,13 +324,9 @@ tr.note-row td{font-size:11px;font-style:italic;color:var(--muted);border-bottom
   <div class="sec-sub" id="scanNormNote"></div>
   <div class="card tbl-scroll" id="scanTableWrap"></div>
 </div>
-
-<!-- VALIDATION FOOTER -->
 <div class="foot" id="footCheck">Self-check pending…</div>
-
 </div>
 </body>
-
 <script>
 
 /* ============================================================================
@@ -1677,7 +1630,6 @@ var monthlyLC = [
   }
   ];
 
-
 /* ---------- configuration ---------- */
 var METRICS = [
   {key:'rhr',        label:'Resting HR',      unit:'bpm', dir:'low',     dp:0, color:'#e8a33d'},
@@ -2233,7 +2185,6 @@ function renderInspector(){
   if (!selectedDate) selectedDate = daily[daily.length - 1].date;
   document.getElementById('diTitle').innerHTML = dayName(selectedDate) + ' · ' + shortDate(selectedDate) + ' 2026';
 
-  /* vitals strip */
   var vkeys = ['rhr', 'hrv', 'dc', 'sleep', 'wrist_temp', 'steps'], html = '', i, j;
   for (i = 0; i < vkeys.length; i++){
     var m = metricByKey(vkeys[i]), r = devAt(vkeys[i], selectedDate);
@@ -2248,7 +2199,6 @@ function renderInspector(){
   }
   document.getElementById('diVitals').innerHTML = html || '<span class="vchip">No vitals recorded</span>';
 
-  /* timeline */
   var sess = sessionsFor(selectedDate), tl = '';
   if (!sess.length){
     tl = '<div class="tl-empty">No workout sessions logged — a rest day on the record.</div>';
@@ -2267,7 +2217,6 @@ function renderInspector(){
   }
   document.getElementById('diTimeline').innerHTML = tl;
 
-  /* LC bar */
   var lc = lcFor(selectedDate), bar = '', leg = '';
   if (lc){
     var tot = 0, cats = [];
@@ -2287,7 +2236,6 @@ function renderInspector(){
   document.getElementById('diLcBar').innerHTML = bar;
   document.getElementById('diLcLegend').innerHTML = leg;
 
-  /* dot strip */
   var dots = '', cmap = {};
   for (i = 0; i < comp.length; i++) cmap[comp[i].date] = comp[i].c;
   for (i = 0; i < daily.length; i++){
@@ -2316,7 +2264,6 @@ function buildFindings(){
   var notes = [], i, j;
   var sSteps = seriesFor('steps');
 
-  /* RECORD: biggest step day */
   if (sSteps.length){
     var mx = sSteps[0];
     for (i = 1; i < sSteps.length; i++) if (sSteps[i].v > mx.v) mx = sSteps[i];
@@ -2325,7 +2272,6 @@ function buildFindings(){
       Math.round((mx.v / mu - 1) * 100) + '% above the series mean of ' + fmtInt(mu) + '.'});
   }
 
-  /* RECORD: best HRV morning */
   var sHrv = seriesFor('hrv');
   if (sHrv.length){
     var hx = sHrv[0];
@@ -2334,7 +2280,6 @@ function buildFindings(){
       shortDate(hx.date) + '</b> (' + dayName(hx.date) + ').'});
   }
 
-  /* RECORD: best DC */
   var sDc = seriesFor('dc');
   if (sDc.length){
     var dx = sDc[0];
@@ -2343,7 +2288,6 @@ function buildFindings(){
       shortDate(dx.date) + '</b> (' + dayName(dx.date) + ') — the parasympathetic system at its ceiling so far.'});
   }
 
-  /* PATTERN: weekday RHR */
   var sRhr = seriesFor('rhr');
   if (sRhr.length >= 28){
     var byDow = [[], [], [], [], [], [], []];
@@ -2362,7 +2306,6 @@ function buildFindings(){
     }
   }
 
-  /* STREAK: 10k steps */
   var run = 0, bestRun = 0, endD = null, cur = 0;
   for (i = 0; i < daily.length; i++){
     var st = daily[i].steps;
@@ -2375,7 +2318,6 @@ function buildFindings(){
       (cur >= bestRun ? ' — and it is <b>live right now</b>.' : (cur > 0 ? ' — current streak: ' + cur + '.' : '.'))});
   }
 
-  /* STREAK: 7h sleep */
   run = 0; bestRun = 0; endD = null;
   for (i = 0; i < daily.length; i++){
     var sl = daily[i].sleep;
@@ -2387,7 +2329,6 @@ function buildFindings(){
       (run > 0 ? ' — current run: ' + run + '.' : '.')});
   }
 
-  /* LOAD: heaviest Zone-3+ week */
   var wk = weeklyZones(), hv = null;
   for (i = 0; i < wk.length; i++){
     var hard = wk[i].z3 + wk[i].z4 + wk[i].z5;
@@ -2398,7 +2339,6 @@ function buildFindings(){
       '</b> — the heaviest cardio week in the series.'});
   }
 
-  /* SESSION: hardest by avg HR */
   var hs = null;
   for (i = 0; i < workoutSessions.length; i++){
     var w = workoutSessions[i];
@@ -2409,7 +2349,6 @@ function buildFindings(){
       shortDate(hs.date) + ', avg HR over ' + hs.dur + ' minutes.'});
   }
 
-  /* SURF tally */
   var surfs = [], hrs = [];
   for (i = 0; i < workoutSessions.length; i++){
     if (workoutSessions[i].type === 'Surfing'){ surfs.push(workoutSessions[i]); if (workoutSessions[i].avgHR) hrs.push(workoutSessions[i].avgHR); }
@@ -2419,7 +2358,6 @@ function buildFindings(){
       (hrs.length ? ', averaging <b>' + Math.round(mean(hrs)) + ' bpm</b> — genuine Zone-3 work in the water.' : '.')});
   }
 
-  /* WATCH: wrist temp elevated nights */
   var wt = deviations.wrist_temp, hot = 0, tot = 0;
   for (i = 0; i < wt.length; i++){
     if (wt[i].dev !== null){ tot++; if (wt[i].dev >= 0.5) hot++; }
@@ -2431,7 +2369,6 @@ function buildFindings(){
     notes.push({tag: 'watch', big: hot + ' of ' + tot, txt: 'baselined nights ran <b>≥0.5 °C above trend</b> — wrist temperature is the board metric to watch.' + lastBit});
   }
 
-  /* CONSISTENCY: sleep variability */
   var sv = seriesFor('sleep').map(function(x){ return x.v; });
   if (sv.length >= 14){
     var mu2 = mean(sv), sq = 0;
@@ -2456,7 +2393,7 @@ function renderFindings(){
 /* ---------- training ---------- */
 function weekStart(date){
   var d = new Date(date + 'T00:00:00');
-  var dow = (d.getDay() + 6) % 7; /* Monday = 0 */
+  var dow = (d.getDay() + 6) % 7;
   d.setDate(d.getDate() - dow);
   var mm = d.getMonth() + 1, dd = d.getDate();
   return d.getFullYear() + '-' + (mm < 10 ? '0' : '') + mm + '-' + (dd < 10 ? '0' : '') + dd;
@@ -2497,7 +2434,6 @@ function renderTraining(){
                y: {stacked: true, ticks: {color: '#6b7c98'}, grid: {color: 'rgba(36,52,84,0.4)'}}}}
   });
 
-  /* type mix */
   var byType = {}, order = [], totMin = 0;
   for (i = 0; i < workoutSessions.length; i++){
     var t = workoutSessions[i].type;
@@ -2595,7 +2531,6 @@ function renderWeek(){
     }
     html += '<div class="wk-row"><span class="wl">' + inputs[i].label + '</span><span class="' + cls + '">' + deltaTxt + '</span></div>';
   }
-  /* sleep duration from daily */
   var sl7 = [], slp = [];
   for (i = 0; i < daily.length; i++){
     if (daily[i].sleep === null || daily[i].sleep === undefined) continue;
@@ -2632,7 +2567,6 @@ function scanVals(row){
   return out;
 }
 function olsAdjust(yvals, tbwvals){
-  /* slope = cov(x,y)/var(x); adjusted_i = y_i + slope*(median - x_i) */
   var i, n = yvals.length, mx = mean(tbwvals), my = mean(yvals), cov = 0, vx = 0;
   for (i = 0; i < n; i++){ cov += (tbwvals[i] - mx) * (yvals[i] - my); vx += (tbwvals[i] - mx) * (tbwvals[i] - mx); }
   var slope = vx > 0 ? cov / vx : 0;
@@ -2727,14 +2661,12 @@ function renderScans(){
 /* ---------- self-validation panel ---------- */
 function runValidation(){
   var fails = [], warns = [], i, k;
-  /* schema */
   var req = ['date', 'rhr', 'hrv', 'dc', 'steps', 'sleep', 'deep', 'rem', 'wrist_temp', 'z1', 'z2', 'z3', 'z4', 'z5'];
   for (i = 0; i < daily.length; i++){
     for (k = 0; k < req.length; k++){
       if (!(req[k] in daily[i])){ fails.push('schema: daily ' + daily[i].date + ' missing ' + req[k]); break; }
     }
   }
-  /* continuity */
   var gaps = 0;
   for (i = 1; i < daily.length; i++){
     var d0 = toTime(daily[i - 1].date), d1 = toTime(daily[i].date);
@@ -2742,7 +2674,6 @@ function runValidation(){
     if (d1 - d0 > DAY_MS) gaps += Math.round((d1 - d0) / DAY_MS) - 1;
   }
   if (gaps > 0) warns.push(gaps + ' missing day' + (gaps === 1 ? '' : 's') + ' in the daily series (known: 31 May)');
-  /* sanity ranges */
   var rng = {rhr: [40, 100], hrv: [10, 120], dc: [2, 30], sleep: [0, 14], deep: [0, 5], rem: [0, 5],
              wrist_temp: [33, 39], steps: [0, 60000], breath_dist: [0, 50]};
   for (k in rng){
@@ -2753,7 +2684,6 @@ function runValidation(){
       }
     }
   }
-  /* render */
   var ids = ['heroHeadline', 'heroInsight', 'devBoard', 'composerChart', 'compositeChart', 'epTableWrap',
              'diTimeline', 'notesGrid', 'zonesChart', 'mixChart', 'sleepChart', 'wkInputs',
              'scanChartA', 'scanChartB', 'scanChartC', 'scanTableWrap'];
