@@ -3,16 +3,16 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Health Atlas · Baseline &amp; Deviation</title>
+<title>Health Atlas · Unité Performance &amp; Récupération</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Libre+Baskerville:ital@0;1&family=Barlow+Condensed:wght@500;600;700&family=IBM+Plex+Mono:wght@400;600&family=IBM+Plex+Sans:ital,wght@0,400;0,600;1,400&display=swap" rel="stylesheet">
 <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/3.9.1/chart.min.js"></script>
 <style>
 :root{
-  --bg:#0b1322; --panel:#131e33; --panel2:#1a2740; --line:#243454;
-  --ink:#eef2f8; --ink2:#aab8cf; --muted:#6b7c98;
-  --amber:#e8a33d; --slate:#6aa5c8; --plum:#b58ce0; --good:#6fae6a; --bad:#d96459; --teal:#58b4d8;
+  --bg:#0a102a; --panel:#101a3d; --panel2:#16234f; --line:#24325f;
+  --ink:#f2f4fa; --ink2:#b8c2dd; --muted:#7482a8;
+  --amber:#d4af37; --slate:#6f9fe8; --plum:#b58ce0; --good:#5fae7c; --bad:#e34d5b; --teal:#58b4d8;
 }
 *{margin:0;padding:0;box-sizing:border-box}
 html{scroll-behavior:smooth}
@@ -33,7 +33,7 @@ html,body{background:var(--bg);color:var(--ink);font-family:'IBM Plex Sans',syst
 .tag.t-bad{color:var(--bad);border-color:rgba(217,100,89,.45)}
 .tag.t-good{color:var(--good);border-color:rgba(111,174,106,.45)}
 .tag.t-warn{color:var(--amber);border-color:rgba(232,163,61,.45)}
-.hero-rule{height:2px;background:var(--amber);margin:0 -34px}
+.hero-rule{height:3px;background:linear-gradient(90deg,#0055A4 0 33.3%,#f2f4fa 33.3% 66.6%,#EF4135 66.6% 100%);margin:0 -34px}
 .hero-grid{display:grid;grid-template-columns:1fr 1fr 1fr 1.35fr;margin:0 -34px}
 .hero-col{padding:24px 28px 30px;border-right:1px solid var(--line)}
 .hero-col:last-child{border-right:none}
@@ -172,7 +172,7 @@ tr.note-row td{font-size:11px;font-style:italic;color:var(--muted);border-bottom
 <div class="hero" id="top">
   <div class="hero-top">
     <div>
-      <div class="hero-eye">Health Atlas · Baseline &amp; Deviation</div>
+      <div class="hero-eye">Health Atlas · Unité Performance &amp; Récupération · Staff Médical</div>
       <h1 class="hero-h1" id="heroHeadline">Reading the signals…</h1>
     </div>
     <div class="hero-meta" id="heroMeta"></div>
@@ -337,11 +337,15 @@ tr.note-row td{font-size:11px;font-style:italic;color:var(--muted);border-bottom
      1. Apply standing label corrections to incoming exports:
         HIIT / High Intensity Interval Training (2026) -> Circuit Training
         Jump Rope -> Circuit Training
-        Cycling (2026, Lime pedal-assist) -> EXCLUDE from cardio volume
+        Cycling (2026, Lime pedal-assist) -> from 2026-06-28 onward, treated as a genuine
+          pattern change and INCLUDED in workoutSessions / cardio volume (own type "Cycling").
+          Prior to 2026-06-28, Cycling entries remain excluded (unchanged history).
         Cross Training duplicating a Circuit Training timestamp -> EXCLUDE
         Life Cycle "Work" -> office ; Manly Wharf "Drinks" (~10 min) -> commute
         Flight -> transport ; 432-min surf artefact -> EXCLUDE
-        Evolt operator height 180 cm -> correct to 177 cm
+        Life Cycle "Doctor" / "Pharmacy" / "Voting" -> EXCLUDE from every dailyLC bucket
+        Evolt operator height 180 cm -> correct to 177 cm (177 cm for S1-S9;
+          S10 and S11 corrected to 178 cm per explicit one-off instruction)
         No alcohol references anywhere; yoga never appears in recommendations.
      2. Append/replace records in the data constants below ONLY
         (monthly, daily, scanData, scanDates, workoutSessions, dailyLC, monthlyLC).
@@ -354,6 +358,12 @@ tr.note-row td{font-size:11px;font-style:italic;color:var(--muted);border-bottom
    Daily schema: {date, rhr, hrv, hrr, vo2, dc, steps, sleep, deep, rem,
                   wrist_temp, walk_asym, stair_asc, stair_desc, ex_min,
                   z1..z5, stress}  (nulls permitted)
+   dailyLC schema: {date, office, home, commute, social, transport, gym, walking,
+                  sleep, shopping, beach, recovery, mindfulness, surfing, cycling}
+                  -- cycling is a new field from 2026-06-28 onward (Cycling pattern
+                  change); for display, gym + walking + surfing + cycling are merged
+                  into a single "Activity" bucket (see activityMinutes()) rather than
+                  shown as separate segments, while the underlying data stays granular.
    Engine: trailing 28-day mean/sd, min 14 days present, z-scored,
    direction-aware. Episodes: composite (mean z of HRV, DC, sleep, -RHR)
    <= -1 for 2+ days opens; >= -0.25 for 2 days resolves.
@@ -376,7 +386,7 @@ var monthly = [
   {"m": "2026-03", "rhr": 67.2, "hrv": 35.4, "hrr": 26.8, "vo2": 38.6, "steps": 7400, "sleep": 7.12, "deep": 1.35, "rem": 1.68, "z1": 57.0, "z2": 25.1, "z3": 11.2, "z4": 0.8, "z5": 0.0, "ex_min": 44, "walk_asym": 1.03, "wrist_temp": 35.82},
   {"m": "2026-04", "rhr": 66.8, "hrv": 36.2, "hrr": 27.9, "vo2": 39.4, "steps": 8200, "sleep": 7.28, "deep": 1.41, "rem": 1.76, "z1": 56.3, "z2": 25.8, "z3": 12.0, "z4": 1.2, "z5": 0.2, "ex_min": 51, "walk_asym": 0.64, "wrist_temp": 35.91},
   {"m": "2026-05", "rhr": 66.6, "hrv": 42.3, "hrr": 32.5, "vo2": 42.6, "steps": 11820, "sleep": 7.15, "deep": 0.96, "rem": 1.69, "z1": 46.6, "z2": 27.0, "z3": 25.5, "z4": 0.9, "z5": 0.0, "ex_min": 85, "walk_asym": 1.32, "wrist_temp": 35.79},
-  {"m": "2026-06", "rhr": 66.0, "hrv": 42.3, "hrr": 32.5, "vo2": 42.8, "steps": 12549, "sleep": 7.10, "deep": 1.00, "rem": 1.65, "z1": 41.3, "z2": 20.1, "z3": 12.2, "z4": 0.5, "z5": 0.0, "ex_min": 98, "walk_asym": 0.92, "wrist_temp": 35.90}
+  {"m": "2026-06", "rhr": 66.0, "hrv": 41.2, "hrr": 33.14, "vo2": 43.18, "steps": 12300.57, "sleep": 7.10, "deep": 0.98, "rem": 1.66, "z1": 41.08, "z2": 22.31, "z3": 12.07, "z4": 0.47, "z5": 0.0, "ex_min": 98.2, "walk_asym": 0.93, "wrist_temp": 35.95}
 ];
 
 var daily = [
@@ -431,182 +441,105 @@ var daily = [
   {"date": "2026-06-19", "rhr": 65, "hrv": 40, "hrr": null, "vo2": 43.1, "dc": 9.42, "steps": 13409, "sleep": 6.89, "deep": 0.87, "rem": 1.75, "wrist_temp": null, "walk_asym": 0.55, "stair_asc": 0.29, "stair_desc": 0.37, "ex_min": 106, "z1": 45.2, "z2": 20.9, "z3": 4.9, "z4": 0.0, "z5": 0.0, "stress": null, "breath_dist": null},
   {"date": "2026-06-20", "rhr": 66, "hrv": 43, "hrr": 35, "vo2": 43.4, "dc": 13.78, "steps": 13103, "sleep": 5.91, "deep": 1.04, "rem": 1.10, "wrist_temp": null, "walk_asym": 0.89, "stair_asc": 0.27, "stair_desc": 0.28, "ex_min": 77, "z1": 63.1, "z2": 18.8, "z3": 14.9, "z4": 6.9, "z5": 0.0, "stress": null, "breath_dist": null},
   {"date": "2026-06-21", "rhr": 65, "hrv": 40, "hrr": null, "vo2": 43.5, "dc": 12.67, "steps": 10696, "sleep": 8.47, "deep": 0.60, "rem": 2.27, "wrist_temp": 35.63, "walk_asym": 1.23, "stair_asc": 0.27, "stair_desc": 0.30, "ex_min": 92, "z1": 39.1, "z2": 13.2, "z3": 16.6, "z4": 0.0, "z5": 0.0, "stress": null, "breath_dist": null},
-  {"date": "2026-06-22", "rhr": 69, "hrv": 48, "hrr": null, "vo2": 43.9, "dc": 11.14, "steps": 13656, "sleep": 6.72, "deep": 0.81, "rem": 1.53, "wrist_temp": 36.17, "walk_asym": 2.15, "stair_asc": 0.30, "stair_desc": 0.32, "ex_min": 81, "z1": 23.4, "z2": 12.8, "z3": 21.0, "z4": 0.2, "z5": 0.0, "stress": null, "breath_dist": null}
+  {"date": "2026-06-22", "rhr": 69, "hrv": 48, "hrr": null, "vo2": 43.9, "dc": 11.14, "steps": 13656, "sleep": 6.72, "deep": 0.81, "rem": 1.53, "wrist_temp": 36.17, "walk_asym": 2.15, "stair_asc": 0.30, "stair_desc": 0.32, "ex_min": 81, "z1": 23.4, "z2": 12.8, "z3": 21.0, "z4": 0.2, "z5": 0.0, "stress": null, "breath_dist": null},
+  {"date": "2026-06-23", "rhr": 64, "hrv": 34, "hrr": 35, "vo2": 43.9, "dc": 10.97, "steps": 8778, "sleep": 7.16, "deep": 0.84, "rem": 2.05, "wrist_temp": 35.91, "walk_asym": 0.47, "stair_asc": 0.25, "stair_desc": 0.29, "ex_min": 91.0, "z1": 54.3, "z2": 20.6, "z3": 6.7, "z4": 0.0, "z5": 0.0, "stress": null, "breath_dist": null},
+  {"date": "2026-06-24", "rhr": 66, "hrv": 46, "hrr": 35, "vo2": 44.1, "dc": 13.63, "steps": 18765, "sleep": 6.37, "deep": 0.82, "rem": 1.04, "wrist_temp": 35.79, "walk_asym": 0.63, "stair_asc": 0.24, "stair_desc": 0.29, "ex_min": 145.0, "z1": 48.3, "z2": 28.1, "z3": 22.0, "z4": 0.8, "z5": 0.0, "stress": null, "breath_dist": null},
+  {"date": "2026-06-25", "rhr": 69, "hrv": 39, "hrr": null, "vo2": null, "dc": 12.39, "steps": 12524, "sleep": 6.68, "deep": 0.47, "rem": 1.94, "wrist_temp": 36.39, "walk_asym": 1.93, "stair_asc": 0.33, "stair_desc": 0.35, "ex_min": 75.0, "z1": 20.6, "z2": 27.8, "z3": 0.0, "z4": 0.0, "z5": 0.0, "stress": null, "breath_dist": null},
+  {"date": "2026-06-26", "rhr": 68, "hrv": 42, "hrr": 35, "vo2": 44.2, "dc": 11.37, "steps": 8046, "sleep": 6.23, "deep": 1.12, "rem": 1.07, "wrist_temp": null, "walk_asym": 0.82, "stair_asc": 0.22, "stair_desc": 0.28, "ex_min": 82.0, "z1": 50.9, "z2": 30.2, "z3": 9.4, "z4": 0.0, "z5": 0.0, "stress": null, "breath_dist": null},
+  {"date": "2026-06-27", "rhr": 67, "hrv": 32, "hrr": 34, "vo2": 44.0, "dc": 9.14, "steps": 12559, "sleep": 8.27, "deep": 0.84, "rem": 2.46, "wrist_temp": null, "walk_asym": 0.38, "stair_asc": 0.23, "stair_desc": 0.32, "ex_min": 135.0, "z1": 45.1, "z2": 49.4, "z3": 31.4, "z4": 2.4, "z5": 0.0, "stress": null, "breath_dist": null},
+  {"date": "2026-06-28", "rhr": 63, "hrv": 33, "hrr": null, "vo2": null, "dc": 10.60, "steps": 11228, "sleep": 8.42, "deep": 1.09, "rem": 2.34, "wrist_temp": 36.00, "walk_asym": 0.89, "stair_asc": 0.30, "stair_desc": 0.34, "ex_min": 86.0, "z1": 22.0, "z2": 18.7, "z3": 11.7, "z4": 0.0, "z5": 0.0, "stress": null, "breath_dist": null},
+  {"date": "2026-06-29", "rhr": 67, "hrv": 47, "hrr": null, "vo2": 44.5, "dc": 11.58, "steps": 10828, "sleep": 6.71, "deep": 1.27, "rem": 1.25, "wrist_temp": 36.24, "walk_asym": 1.71, "stair_asc": 0.28, "stair_desc": 0.33, "ex_min": 83.0, "z1": 41.4, "z2": 26.9, "z3": 7.7, "z4": 0.0, "z5": 0.0, "stress": null, "breath_dist": null},
+  {"date": "2026-06-30", "rhr": 64, "hrv": 33, "hrr": null, "vo2": 44.6, "dc": 10.75, "steps": 10210, "sleep": 6.85, "deep": 1.04, "rem": 1.32, "wrist_temp": 36.13, "walk_asym": 0.77, "stair_asc": 0.26, "stair_desc": 0.31, "ex_min": 100.0, "z1": 40.8, "z2": 26.5, "z3": 4.0, "z4": 0.0, "z5": 0.0, "stress": null, "breath_dist": null},
+  {"date": "2026-07-01", "rhr": 67, "hrv": 52, "hrr": null, "vo2": 44.8, "dc": 11.60, "steps": 12395, "sleep": null, "deep": null, "rem": null, "wrist_temp": 36.31, "walk_asym": 2.20, "stair_asc": 0.28, "stair_desc": 0.29, "ex_min": 82.0, "z1": 51.2, "z2": 24.2, "z3": 16.5, "z4": 1.5, "z5": 0.0, "stress": null, "breath_dist": null},
+  {"date": "2026-07-02", "rhr": 67, "hrv": 38, "hrr": null, "vo2": null, "dc": 13.59, "steps": 9857, "sleep": null, "deep": null, "rem": null, "wrist_temp": 36.52, "walk_asym": 1.30, "stair_asc": 0.27, "stair_desc": 0.36, "ex_min": 67.0, "z1": 19.4, "z2": 5.5, "z3": 0.0, "z4": 0.0, "z5": 0.0, "stress": null, "breath_dist": null},
+  {"date": "2026-07-03", "rhr": 68, "hrv": 40, "hrr": null, "vo2": null, "dc": 12.68, "steps": 12380, "sleep": null, "deep": null, "rem": null, "wrist_temp": 36.34, "walk_asym": 0.59, "stair_asc": 0.26, "stair_desc": 0.35, "ex_min": 116.0, "z1": 30.3, "z2": 29.3, "z3": 5.9, "z4": 0.0, "z5": 0.0, "stress": null, "breath_dist": null},
+  {"date": "2026-07-04", "rhr": 63, "hrv": 52, "hrr": null, "vo2": 45.1, "dc": 15.04, "steps": 15738, "sleep": 1.26, "deep": 0.13, "rem": 0.55, "wrist_temp": null, "walk_asym": 4.56, "stair_asc": null, "stair_desc": 0.31, "ex_min": 68.0, "z1": 34.0, "z2": 0.0, "z3": 0.0, "z4": 0.0, "z5": 0.0, "stress": null, "breath_dist": null},
+  {"date": "2026-07-05", "rhr": 56, "hrv": 46, "hrr": null, "vo2": null, "dc": 11.20, "steps": 24325, "sleep": null, "deep": null, "rem": null, "wrist_temp": 36.39, "walk_asym": 5.21, "stair_asc": 0.24, "stair_desc": 0.30, "ex_min": 88.0, "z1": 28.2, "z2": 13.2, "z3": 16.1, "z4": 0.0, "z5": 0.0, "stress": null, "breath_dist": null},
+  {"date": "2026-07-06", "rhr": 66, "hrv": 50, "hrr": null, "vo2": null, "dc": 15.08, "steps": 25626, "sleep": 7.03, "deep": 1.01, "rem": 1.75, "wrist_temp": null, "walk_asym": 1.70, "stair_asc": 0.26, "stair_desc": 0.29, "ex_min": 88.0, "z1": 13.8, "z2": 23.9, "z3": 2.2, "z4": 0.0, "z5": 0.0, "stress": null, "breath_dist": null}
 ];
 
 var scanData = [
     {
       "m": "Weight (kg)",
-      "s1": 88.4,
-      "s2": 89.2,
-      "s3": 88.5,
-      "s4": 88.5,
-      "s5": 88.8,
-      "s6": 89.3,
-      "s7": 87.8,
-      "s8": 87.7,
+      "s1": 88.4, "s2": 89.2, "s3": 88.5, "s4": 88.5, "s5": 88.8, "s6": 89.3, "s7": 87.8, "s8": 87.7, "s9": 86.7, "s10": 87.2, "s11": 87.8,
       "trust": "low",
-      "note": "Stable across series \u2014 variance is hydration. S8 87.7 kg sits alongside the new series-low water reading"
+      "note": "S10/S11 87.2\u219287.8 kg over 3 days \u2014 normal day-to-day food/hydration swing, not a trend signal"
     },
     {
       "m": "Lean Body Mass (kg)",
-      "s1": 78.2,
-      "s2": 82.2,
-      "s3": 82.5,
-      "s4": 77.7,
-      "s5": 78.7,
-      "s6": 82.6,
-      "s7": 76.4,
-      "s8": 76.0,
+      "s1": 78.2, "s2": 82.2, "s3": 82.5, "s4": 77.7, "s5": 78.7, "s6": 82.6, "s7": 76.4, "s8": 76.0, "s9": 77.7, "s10": 77.6, "s11": 77.3,
       "trust": "low",
-      "note": "TBW-driven \u2014 S8 76.0 kg reads on the lowest hydration in the series yet, not true tissue loss"
+      "note": "TBW-driven \u2014 S10/S11 hold close to S9, consistent with the post-S8 hydration recovery"
     },
     {
       "m": "Skeletal Muscle (kg)",
-      "s1": 43.8,
-      "s2": 46.1,
-      "s3": 46.4,
-      "s4": 43.6,
-      "s5": 44.1,
-      "s6": 46.4,
-      "s7": 42.7,
-      "s8": 42.5,
+      "s1": 43.8, "s2": 46.1, "s3": 46.4, "s4": 43.6, "s5": 44.1, "s6": 46.4, "s7": 42.7, "s8": 42.5, "s9": 43.6, "s10": 43.5, "s11": 43.3,
       "trust": "med",
-      "note": "S8 42.5 kg tracks the series-low TBW (54.7 kg) this scan \u2014 measurement artefact, not change"
+      "note": "S10/S11 steady around 43.3\u201343.6 kg \u2014 the most stable 3-scan run of the series"
     },
     {
       "m": "Body Fat Mass (kg)",
-      "s1": 10.2,
-      "s2": 7.0,
-      "s3": 6.0,
-      "s4": 10.8,
-      "s5": 10.1,
-      "s6": 6.7,
-      "s7": 11.4,
-      "s8": 11.7,
+      "s1": 10.2, "s2": 7.0, "s3": 6.0, "s4": 10.8, "s5": 10.1, "s6": 6.7, "s7": 11.4, "s8": 11.7, "s9": 9.0, "s10": 9.6, "s11": 10.5,
       "trust": "med",
-      "note": "S8 11.7 kg \u2014 series high, but on the most dehydrated scan yet; read against VFA, not in isolation"
+      "note": "S11 10.5 kg ticks back up from S10's 9.6 kg \u2014 within the series' usual hydration-driven scatter"
     },
     {
       "m": "Body Fat %",
-      "s1": 11.5,
-      "s2": 7.8,
-      "s3": 6.8,
-      "s4": 12.2,
-      "s5": 11.4,
-      "s6": 7.5,
-      "s7": 13.0,
-      "s8": 13.3,
+      "s1": 11.5, "s2": 7.8, "s3": 6.8, "s4": 12.2, "s5": 11.4, "s6": 7.5, "s7": 13.0, "s8": 13.3, "s9": 10.4, "s10": 11.0, "s11": 12.0,
       "trust": "low",
-      "note": "S8 13.3% computed on the 180 cm operator entry (actual 177) \u2014 track segmental kg, not the %"
+      "note": "S10/S11 computed on the 180 cm operator entry (actual 177; corrected to 178 cm here as a one-off) \u2014 track segmental kg, not the %"
     },
     {
       "m": "Visceral Fat Area (cm\u00b2)",
-      "s1": 50,
-      "s2": 37,
-      "s3": 34,
-      "s4": 55,
-      "s5": 49,
-      "s6": 36,
-      "s7": 58,
-      "s8": 60,
+      "s1": 50, "s2": 37, "s3": 34, "s4": 55, "s5": 49, "s6": 36, "s7": 58, "s8": 60, "s9": 46, "s10": 48, "s11": 54,
       "trust": "high",
-      "note": "Height-independent \u2014 directly measured. Trend 50\u219237\u219234\u219255\u219249\u219236\u219258\u219260; S8 is the series high"
+      "note": "Height-independent \u2014 directly measured. S10 48 cm\u00b2 stays in Optimal range; S11 54 cm\u00b2 ticks back up but remains well inside the 50\u2013100 cm\u00b2 reference band"
     },
     {
       "m": "Visceral Fat Level",
-      "s1": 6,
-      "s2": 3,
-      "s3": 3,
-      "s4": 6,
-      "s5": 5,
-      "s6": 3,
-      "s7": 7,
-      "s8": 7,
+      "s1": 6, "s2": 3, "s3": 3, "s4": 6, "s5": 5, "s6": 3, "s7": 7, "s8": 7, "s9": 5, "s10": 5, "s11": 6,
       "trust": "high",
-      "note": "Height-independent. Holding at Level 7 = Balanced band for a second consecutive scan"
+      "note": "Height-independent. S10 holds at Level 5 (Optimal); S11 ticks to Level 6 (Balanced)"
     },
     {
       "m": "Total Body Water (kg)",
-      "s1": 56.3,
-      "s2": 59.1,
-      "s3": 59.4,
-      "s4": 56.0,
-      "s5": 56.7,
-      "s6": 59.5,
-      "s7": 55.0,
-      "s8": 54.7,
+      "s1": 56.3, "s2": 59.1, "s3": 59.4, "s4": 56.0, "s5": 56.7, "s6": 59.5, "s7": 55.0, "s8": 54.7, "s9": 56.0, "s10": 55.9, "s11": 55.6,
       "trust": "high",
-      "note": "Primary inter-scan variance source \u2014 S8 54.7 kg is the new series low, the lens for this scan"
+      "note": "Primary inter-scan variance source \u2014 S10/S11 sit mid-series, the tightest 3-scan hydration band yet (55.6\u201356.0 kg)"
     },
     {
       "m": "BMR (kCal)",
-      "s1": 2059,
-      "s2": 2145,
-      "s3": 2152,
-      "s4": 2048,
-      "s5": 2069,
-      "s6": 2113,
-      "s7": 2020,
-      "s8": 2011,
+      "s1": 2059, "s2": 2145, "s3": 2152, "s4": 2048, "s5": 2069, "s6": 2113, "s7": 2020, "s8": 2011, "s9": 2048, "s10": 2046, "s11": 2039,
       "trust": "med",
-      "note": "S8 2011 kCal tracks the lower lean/water reading this scan"
+      "note": "S10/S11 track the steady lean/water readings this 3-scan run"
     },
     {
       "m": "Bio Age",
-      "s1": 31,
-      "s2": 30,
-      "s3": 30,
-      "s4": 31,
-      "s5": 31,
-      "s6": 31,
-      "s7": 32,
-      "s8": 32,
+      "s1": 31, "s2": 30, "s3": 30, "s4": 31, "s5": 31, "s6": 31, "s7": 32, "s8": 32, "s9": 31, "s10": 32, "s11": 32,
       "trust": "high",
-      "note": "Consistent \u2014 8-scan avg 31.0 yrs vs chronological 36"
+      "note": "Consistent \u2014 11-scan avg 31.1 yrs vs chronological 36"
     },
     {
       "m": "BWI Score",
-      "s1": 8.7,
-      "s2": 9.0,
-      "s3": 9.0,
-      "s4": 8.7,
-      "s5": 8.7,
-      "s6": 9.0,
-      "s7": 8.7,
-      "s8": 8.7,
+      "s1": 8.7, "s2": 9.0, "s3": 9.0, "s4": 8.7, "s5": 8.7, "s6": 9.0, "s7": 8.7, "s8": 8.7, "s9": 9.0, "s10": 8.7, "s11": 8.7,
       "trust": "high",
-      "note": "8-scan avg 8.81 \u2014 holds the Athletic/Optimal tier"
+      "note": "11-scan avg 8.82 \u2014 holds the Athletic/Optimal tier"
     },
     {
       "m": "Waist:Hip Ratio",
-      "s1": 0.78,
-      "s2": 0.72,
-      "s3": 0.71,
-      "s4": 0.8,
-      "s5": 0.77,
-      "s6": 0.72,
-      "s7": 0.81,
-      "s8": 0.81,
+      "s1": 0.78, "s2": 0.72, "s3": 0.71, "s4": 0.8, "s5": 0.77, "s6": 0.72, "s7": 0.81, "s8": 0.81, "s9": 0.76, "s10": 0.77, "s11": 0.79,
       "trust": "high",
-      "note": "Height-independent \u2014 directly measured. Holding at 0.81, the top of the optimal band, for a second scan"
+      "note": "Height-independent \u2014 directly measured. S10/S11 hold the optimal band (0.75\u20130.9)"
     },
     {
       "m": "Abdominal Circ (cm)",
-      "s1": null,
-      "s2": null,
-      "s3": null,
-      "s4": 79.8,
-      "s5": 78.8,
-      "s6": 73.9,
-      "s7": 80.6,
-      "s8": 81.0,
+      "s1": null, "s2": null, "s3": null, "s4": 79.8, "s5": 78.8, "s6": 73.9, "s7": 80.6, "s8": 81.0, "s9": null, "s10": 78.1, "s11": 79.3,
       "trust": "high",
-      "note": "Height-independent. S8 81.0 cm \u2014 stable on S7, still well within optimal <102 cm"
+      "note": "Height-independent. S9 was a sensor misread (logged as null); S10/S11 resume normal readings, both under the 102 cm reference ceiling"
     }
   ];
 
-var scanDates = ["S1 12 Apr", "S2 27 Apr", "S3 3 May", "S4 8 May", "S5 15 May", "S6 29 May", "S7 6 Jun", "S8 23 Jun"];
+var scanDates = ["S1 12 Apr", "S2 27 Apr", "S3 3 May", "S4 8 May", "S5 15 May", "S6 29 May", "S7 6 Jun", "S8 23 Jun", "S9 28 Jun", "S10 29 Jun", "S11 1 Jul"];
 
 var workoutSessions = [
   {"date": "2026-05-01", "time": "06:45", "type": "Strength", "dur": 30, "avgHR": 106, "hrr": null, "effort": null, "z1": 10.0, "z2": 9.3, "z3": 3.5, "z4": 0.0, "z5": 0.0},
@@ -824,1133 +757,158 @@ var workoutSessions = [
   {"date": "2026-06-21", "time": "10:47", "type": "Walking", "dur": 17, "avgHR": 106, "hrr": null, "effort": "Moderate", "z1": 13.8, "z2": 1.0, "z3": 1.5, "z4": 0.0, "z5": 0.0},
   {"date": "2026-06-22", "time": "06:27", "type": "Strength", "dur": 24, "avgHR": 103, "hrr": null, "effort": null, "z1": 12.0, "z2": 7.7, "z3": 0.0, "z4": 0.0, "z5": 0.0},
   {"date": "2026-06-22", "time": "06:59", "type": "Circuit Training", "dur": 5, "avgHR": 136, "hrr": null, "effort": "Moderate", "z1": 0.2, "z2": 0.6, "z3": 4.3, "z4": 0.1, "z5": 0.0},
-  {"date": "2026-06-22", "time": "07:06", "type": "Walking", "dur": 15, "avgHR": 130, "hrr": null, "effort": "Moderate", "z1": 0.8, "z2": 2.1, "z3": 12.3, "z4": 0.0, "z5": 0.0}
+  {"date": "2026-06-22", "time": "07:06", "type": "Walking", "dur": 15, "avgHR": 130, "hrr": null, "effort": "Moderate", "z1": 0.8, "z2": 2.1, "z3": 12.3, "z4": 0.0, "z5": 0.0},
+  {"date": "2026-06-23", "time": "06:46", "type": "Walking", "dur": 20, "avgHR": 93, "hrr": null, "effort": "Easy", "z1": 13.5, "z2": 0.0, "z3": 0.0, "z4": 0.0, "z5": 0.0},
+  {"date": "2026-06-23", "time": "07:15", "type": "Strength", "dur": 32, "avgHR": 97, "hrr": null, "effort": null, "z1": 19.8, "z2": 3.0, "z3": 0.0, "z4": 0.0, "z5": 0.0},
+  {"date": "2026-06-23", "time": "08:00", "type": "Walking", "dur": 21, "avgHR": 124, "hrr": null, "effort": "Moderate", "z1": 1.3, "z2": 12.8, "z3": 6.5, "z4": 0.0, "z5": 0.0},
+  {"date": "2026-06-23", "time": "08:21", "type": "Walking", "dur": 26, "avgHR": 102, "hrr": 35, "effort": "Moderate", "z1": 19.7, "z2": 4.8, "z3": 0.2, "z4": 0.0, "z5": 0.0},
+  {"date": "2026-06-24", "time": "06:27", "type": "Strength", "dur": 25, "avgHR": 105, "hrr": null, "effort": null, "z1": 15.0, "z2": 6.9, "z3": 0.8, "z4": 0.0, "z5": 0.0},
+  {"date": "2026-06-24", "time": "06:57", "type": "Circuit Training", "dur": 6, "avgHR": 131, "hrr": null, "effort": null, "z1": 0.3, "z2": 2.5, "z3": 2.5, "z4": 0.8, "z5": 0.0},
+  {"date": "2026-06-24", "time": "07:04", "type": "Walking", "dur": 4, "avgHR": 127, "hrr": null, "effort": null, "z1": 0.0, "z2": 1.4, "z3": 2.3, "z4": 0.0, "z5": 0.0},
+  {"date": "2026-06-24", "time": "07:04", "type": "Walking", "dur": 16, "avgHR": 131, "hrr": null, "effort": "Moderate", "z1": 0.0, "z2": 1.3, "z3": 14.7, "z4": 0.0, "z5": 0.0},
+  {"date": "2026-06-24", "time": "12:41", "type": "Walking", "dur": 19, "avgHR": 117, "hrr": null, "effort": "Moderate", "z1": 2.6, "z2": 14.6, "z3": 1.7, "z4": 0.0, "z5": 0.0},
+  {"date": "2026-06-24", "time": "17:47", "type": "Walking", "dur": 80, "avgHR": 92, "hrr": 35, "effort": "Moderate", "z1": 30.4, "z2": 1.4, "z3": 0.0, "z4": 0.0, "z5": 0.0},
+  {"date": "2026-06-25", "time": "06:33", "type": "Strength", "dur": 26, "avgHR": 101, "hrr": null, "effort": null, "z1": 19.0, "z2": 3.3, "z3": 0.0, "z4": 0.0, "z5": 0.0},
+  {"date": "2026-06-25", "time": "07:09", "type": "Walking", "dur": 11, "avgHR": 116, "hrr": null, "effort": "Moderate", "z1": 0.8, "z2": 10.1, "z3": 0.0, "z4": 0.0, "z5": 0.0},
+  {"date": "2026-06-25", "time": "07:09", "type": "Walking", "dur": 16, "avgHR": 118, "hrr": null, "effort": null, "z1": 0.8, "z2": 14.4, "z3": 0.0, "z4": 0.0, "z5": 0.0},
+  {"date": "2026-06-26", "time": "06:45", "type": "Walking", "dur": 19, "avgHR": 99, "hrr": null, "effort": "Easy", "z1": 18.4, "z2": 0.2, "z3": 0.0, "z4": 0.0, "z5": 0.0},
+  {"date": "2026-06-26", "time": "07:12", "type": "Strength", "dur": 26, "avgHR": 96, "hrr": null, "effort": null, "z1": 12.4, "z2": 4.0, "z3": 0.4, "z4": 0.0, "z5": 0.0},
+  {"date": "2026-06-26", "time": "07:56", "type": "Walking", "dur": 20, "avgHR": 127, "hrr": null, "effort": "Moderate", "z1": 0.2, "z2": 11.7, "z3": 8.2, "z4": 0.0, "z5": 0.0},
+  {"date": "2026-06-26", "time": "07:56", "type": "Walking", "dur": 10, "avgHR": 123, "hrr": null, "effort": "Moderate", "z1": 0.2, "z2": 8.5, "z3": 0.8, "z4": 0.0, "z5": 0.0},
+  {"date": "2026-06-26", "time": "08:16", "type": "Walking", "dur": 28, "avgHR": 103, "hrr": 35, "effort": "Moderate", "z1": 19.7, "z2": 5.8, "z3": 0.0, "z4": 0.0, "z5": 0.0},
+  {"date": "2026-06-27", "time": "09:40", "type": "Walking", "dur": 15, "avgHR": 107, "hrr": null, "effort": "Easy", "z1": 12.6, "z2": 2.5, "z3": 0.0, "z4": 0.0, "z5": 0.0},
+  {"date": "2026-06-27", "time": "10:00", "type": "Strength", "dur": 30, "avgHR": 126, "hrr": null, "effort": null, "z1": 4.3, "z2": 11.9, "z3": 11.5, "z4": 2.2, "z5": 0.0},
+  {"date": "2026-06-27", "time": "10:30", "type": "Core Training", "dur": 3, "avgHR": 113, "hrr": null, "effort": null, "z1": 1.5, "z2": 1.6, "z3": 0.2, "z4": 0.0, "z5": 0.0},
+  {"date": "2026-06-27", "time": "10:48", "type": "Walking", "dur": 17, "avgHR": 136, "hrr": null, "effort": "Hard", "z1": 0.5, "z2": 1.7, "z3": 14.9, "z4": 0.0, "z5": 0.0},
+  {"date": "2026-06-27", "time": "11:07", "type": "Walking", "dur": 10, "avgHR": 107, "hrr": 34, "effort": "Easy", "z1": 5.7, "z2": 4.0, "z3": 0.0, "z4": 0.0, "z5": 0.0},
+  {"date": "2026-06-27", "time": "11:34", "type": "Walking", "dur": 18, "avgHR": 94, "hrr": null, "effort": "Easy", "z1": 10.7, "z2": 0.0, "z3": 0.0, "z4": 0.0, "z5": 0.0},
+  {"date": "2026-06-27", "time": "15:04", "type": "Surfing", "dur": 31, "avgHR": 117, "hrr": null, "effort": null, "z1": 7.9, "z2": 18.9, "z3": 3.8, "z4": 0.2, "z5": 0.0},
+  {"date": "2026-06-27", "time": "15:36", "type": "Walking", "dur": 12, "avgHR": 118, "hrr": null, "effort": "Easy", "z1": 1.9, "z2": 8.8, "z3": 1.0, "z4": 0.0, "z5": 0.0},
+  {"date": "2026-06-28", "time": "10:42", "type": "Strength", "dur": 43, "avgHR": 110, "hrr": null, "effort": null, "z1": 21.3, "z2": 18.2, "z3": 1.5, "z4": 0.0, "z5": 0.0},
+  {"date": "2026-06-28", "time": "11:29", "type": "Walking", "dur": 11, "avgHR": 134, "hrr": null, "effort": "Hard", "z1": 0.7, "z2": 0.5, "z3": 10.2, "z4": 0.0, "z5": 0.0},
+  {"date": "2026-06-29", "time": "06:21", "type": "Cycling", "dur": 6, "avgHR": 88, "hrr": null, "effort": "Easy", "z1": 1.3, "z2": 0.0, "z3": 0.0, "z4": 0.0, "z5": 0.0},
+  {"date": "2026-06-29", "time": "06:33", "type": "Strength", "dur": 26, "avgHR": 96, "hrr": null, "effort": null, "z1": 18.0, "z2": 1.5, "z3": 0.0, "z4": 0.0, "z5": 0.0},
+  {"date": "2026-06-29", "time": "07:01", "type": "Circuit Training", "dur": 6, "avgHR": 123, "hrr": null, "effort": "Moderate", "z1": 0.6, "z2": 2.9, "z3": 2.6, "z4": 0.0, "z5": 0.0},
+  {"date": "2026-06-29", "time": "07:08", "type": "Walking", "dur": 8, "avgHR": 126, "hrr": null, "effort": "Moderate", "z1": 0.0, "z2": 7.2, "z3": 0.3, "z4": 0.0, "z5": 0.0},
+  {"date": "2026-06-29", "time": "07:08", "type": "Walking", "dur": 15, "avgHR": 127, "hrr": null, "effort": "Moderate", "z1": 0.0, "z2": 12.3, "z3": 2.7, "z4": 0.0, "z5": 0.0},
+  {"date": "2026-06-29", "time": "07:24", "type": "Cycling", "dur": 15, "avgHR": 96, "hrr": null, "effort": "Easy", "z1": 9.5, "z2": 0.7, "z3": 0.0, "z4": 0.0, "z5": 0.0},
+  {"date": "2026-06-29", "time": "18:11", "type": "Walking", "dur": 53, "avgHR": 78, "hrr": null, "effort": "Easy", "z1": 11.5, "z2": 0.0, "z3": 0.0, "z4": 0.0, "z5": 0.0},
+  {"date": "2026-06-30", "time": "06:43", "type": "Cycling", "dur": 6, "avgHR": 87, "hrr": null, "effort": "Easy", "z1": 0.7, "z2": 0.0, "z3": 0.0, "z4": 0.0, "z5": 0.0},
+  {"date": "2026-06-30", "time": "06:57", "type": "Strength", "dur": 24, "avgHR": 99, "hrr": null, "effort": null, "z1": 13.4, "z2": 3.4, "z3": 0.8, "z4": 0.0, "z5": 0.0},
+  {"date": "2026-06-30", "time": "07:25", "type": "Core", "dur": 3, "avgHR": 111, "hrr": null, "effort": null, "z1": 1.7, "z2": 1.4, "z3": 0.1, "z4": 0.0, "z5": 0.0},
+  {"date": "2026-06-30", "time": "07:37", "type": "Walking", "dur": 21, "avgHR": 125, "hrr": null, "effort": "Moderate", "z1": 1.2, "z2": 17.5, "z3": 2.4, "z4": 0.0, "z5": 0.0},
+  {"date": "2026-06-30", "time": "07:58", "type": "Walking", "dur": 30, "avgHR": 103, "hrr": null, "effort": "Moderate", "z1": 23.8, "z2": 4.2, "z3": 0.7, "z4": 0.0, "z5": 0.0},
+  {"date": "2026-07-01", "time": "09:48", "type": "Walking", "dur": 21, "avgHR": 87, "hrr": null, "effort": "Easy", "z1": 10.5, "z2": 0.0, "z3": 0.0, "z4": 0.0, "z5": 0.0},
+  {"date": "2026-07-01", "time": "10:47", "type": "Walking", "dur": 15, "avgHR": 107, "hrr": null, "effort": "Easy", "z1": 7.9, "z2": 7.1, "z3": 0.0, "z4": 0.0, "z5": 0.0},
+  {"date": "2026-07-01", "time": "22:17", "type": "Cycling", "dur": 6, "avgHR": 101, "hrr": null, "effort": "Easy", "z1": 5.1, "z2": 0.0, "z3": 0.0, "z4": 0.0, "z5": 0.0},
+  {"date": "2026-07-01", "time": "22:31", "type": "Strength", "dur": 29, "avgHR": 106, "hrr": null, "effort": null, "z1": 16.7, "z2": 9.3, "z3": 0.1, "z4": 0.0, "z5": 0.0},
+  {"date": "2026-07-01", "time": "23:05", "type": "Circuit Training", "dur": 5, "avgHR": 128, "hrr": null, "effort": "Moderate", "z1": 0.8, "z2": 1.5, "z3": 2.3, "z4": 0.8, "z5": 0.0},
+  {"date": "2026-07-01", "time": "23:18", "type": "Walking", "dur": 15, "avgHR": 128, "hrr": null, "effort": "Moderate", "z1": 0.9, "z2": 2.5, "z3": 11.7, "z4": 0.0, "z5": 0.0},
+  {"date": "2026-07-01", "time": "23:18", "type": "Walking", "dur": 1, "avgHR": 107, "hrr": null, "effort": null, "z1": 0.9, "z2": 0.3, "z3": 0.0, "z4": 0.0, "z5": 0.0},
+  {"date": "2026-07-01", "time": "23:33", "type": "Cycling", "dur": 10, "avgHR": 104, "hrr": null, "effort": "Easy", "z1": 7.7, "z2": 2.0, "z3": 0.2, "z4": 0.0, "z5": 0.0},
+  {"date": "2026-07-02", "time": "22:59", "type": "Cycling", "dur": 6, "avgHR": 91, "hrr": null, "effort": "Easy", "z1": 1.8, "z2": 0.0, "z3": 0.0, "z4": 0.0, "z5": 0.0},
+  {"date": "2026-07-02", "time": "23:18", "type": "Strength", "dur": 31, "avgHR": 96, "hrr": null, "effort": null, "z1": 14.6, "z2": 4.9, "z3": 0.0, "z4": 0.0, "z5": 0.0},
+  {"date": "2026-07-02", "time": "23:50", "type": "Core", "dur": 4, "avgHR": 102, "hrr": null, "effort": null, "z1": 3.0, "z2": 0.6, "z3": 0.0, "z4": 0.0, "z5": 0.0},
+  {"date": "2026-07-03", "time": "00:00", "type": "Walking", "dur": 17, "avgHR": 126, "hrr": null, "effort": "Moderate", "z1": 0.8, "z2": 10.3, "z3": 5.9, "z4": 0.0, "z5": 0.0},
+  {"date": "2026-07-03", "time": "00:19", "type": "Cycling", "dur": 12, "avgHR": 102, "hrr": null, "effort": "Moderate", "z1": 8.5, "z2": 2.0, "z3": 0.0, "z4": 0.0, "z5": 0.0},
+  {"date": "2026-07-03", "time": "20:57", "type": "Cycling", "dur": 7, "avgHR": 89, "hrr": null, "effort": "Easy", "z1": 2.7, "z2": 0.0, "z3": 0.0, "z4": 0.0, "z5": 0.0},
+  {"date": "2026-07-03", "time": "21:06", "type": "Strength", "dur": 17, "avgHR": 92, "hrr": null, "effort": null, "z1": 8.5, "z2": 0.7, "z3": 0.0, "z4": 0.0, "z5": 0.0},
+  {"date": "2026-07-03", "time": "21:26", "type": "Walking", "dur": 16, "avgHR": 117, "hrr": null, "effort": "Moderate", "z1": 1.5, "z2": 14.8, "z3": 0.0, "z4": 0.0, "z5": 0.0},
+  {"date": "2026-07-03", "time": "21:43", "type": "Walking", "dur": 3, "avgHR": 103, "hrr": null, "effort": null, "z1": 1.6, "z2": 0.4, "z3": 0.0, "z4": 0.0, "z5": 0.0},
+  {"date": "2026-07-03", "time": "21:45", "type": "Cycling", "dur": 8, "avgHR": 100, "hrr": null, "effort": "Moderate", "z1": 6.7, "z2": 1.1, "z3": 0.0, "z4": 0.0, "z5": 0.0},
+  {"date": "2026-07-04", "time": "11:59", "type": "Walking", "dur": 103, "avgHR": 89, "hrr": null, "effort": "Easy", "z1": 34.0, "z2": 0.0, "z3": 0.0, "z4": 0.0, "z5": 0.0},
+  {"date": "2026-07-05", "time": "10:08", "type": "Strength", "dur": 45, "avgHR": 105, "hrr": null, "effort": null, "z1": 28.0, "z2": 10.0, "z3": 2.6, "z4": 0.0, "z5": 0.0},
+  {"date": "2026-07-05", "time": "10:53", "type": "Elliptical", "dur": 8, "avgHR": 132, "hrr": null, "effort": "Moderate", "z1": 0.2, "z2": 1.5, "z3": 6.2, "z4": 0.0, "z5": 0.0},
+  {"date": "2026-07-05", "time": "11:02", "type": "Walking", "dur": 9, "avgHR": 131, "hrr": null, "effort": "Moderate", "z1": 0.0, "z2": 1.7, "z3": 7.3, "z4": 0.0, "z5": 0.0},
+  {"date": "2026-07-06", "time": "07:43", "type": "Strength", "dur": 28, "avgHR": 105, "hrr": null, "effort": null, "z1": 11.8, "z2": 8.4, "z3": 2.2, "z4": 0.0, "z5": 0.0},
+  {"date": "2026-07-06", "time": "08:21", "type": "Walking", "dur": 18, "avgHR": 118, "hrr": null, "effort": "Moderate", "z1": 2.0, "z2": 15.5, "z3": 0.0, "z4": 0.0, "z5": 0.0}
 ];
 
 var dailyLC = [
-  {
-    "date": "2026-05-01",
-    "office": 0,
-    "home": 0,
-    "commute": 0,
-    "social": 0,
-    "transport": 0,
-    "gym": 81.9,
-    "walking": 24.8,
-    "sleep": 438.7,
-    "shopping": 0,
-    "beach": 0,
-    "recovery": 0,
-    "mindfulness": 0,
-    "surfing": 29.1
-  },
-  {
-    "date": "2026-05-02",
-    "office": 0,
-    "home": 841.1,
-    "commute": 111.0,
-    "social": 288.6,
-    "transport": 70.0,
-    "gym": 0,
-    "walking": 99.0,
-    "sleep": 659.0,
-    "shopping": 0,
-    "beach": 112.0,
-    "recovery": 0,
-    "mindfulness": 0,
-    "surfing": 0
-  },
-  {
-    "date": "2026-05-03",
-    "office": 225.5,
-    "home": 782.0,
-    "commute": 62.0,
-    "social": 0,
-    "transport": 95.0,
-    "gym": 163.4,
-    "walking": 79.6,
-    "sleep": 474.1,
-    "shopping": 23.2,
-    "beach": 22.9,
-    "recovery": 0,
-    "mindfulness": 0,
-    "surfing": 0
-  },
-  {
-    "date": "2026-05-04",
-    "office": 854.7,
-    "home": 682.9,
-    "commute": 122.4,
-    "social": 0,
-    "transport": 92.8,
-    "gym": 65.6,
-    "walking": 55.2,
-    "sleep": 421.5,
-    "shopping": 0,
-    "beach": 0,
-    "recovery": 0,
-    "mindfulness": 0,
-    "surfing": 0
-  },
-  {
-    "date": "2026-05-05",
-    "office": 0,
-    "home": 2008.8,
-    "commute": 73.2,
-    "social": 0,
-    "transport": 41.8,
-    "gym": 61.1,
-    "walking": 90.0,
-    "sleep": 443.1,
-    "shopping": 0,
-    "beach": 0,
-    "recovery": 0,
-    "mindfulness": 0,
-    "surfing": 0
-  },
-  {
-    "date": "2026-05-06",
-    "office": 547.0,
-    "home": 33.5,
-    "commute": 31.4,
-    "social": 0,
-    "transport": 36.6,
-    "gym": 69.7,
-    "walking": 30.2,
-    "sleep": 434.6,
-    "shopping": 0,
-    "beach": 0,
-    "recovery": 0,
-    "mindfulness": 0,
-    "surfing": 27.1
-  },
-  {
-    "date": "2026-05-07",
-    "office": 0,
-    "home": 1313.5,
-    "commute": 58.4,
-    "social": 0,
-    "transport": 29.6,
-    "gym": 81.5,
-    "walking": 81.3,
-    "sleep": 407.0,
-    "shopping": 0,
-    "beach": 0,
-    "recovery": 0,
-    "mindfulness": 0,
-    "surfing": 0
-  },
-  {
-    "date": "2026-05-08",
-    "office": 0,
-    "home": 919.1,
-    "commute": 75.4,
-    "social": 0,
-    "transport": 3.5,
-    "gym": 76.4,
-    "walking": 61.8,
-    "sleep": 468.2,
-    "shopping": 0,
-    "beach": 0,
-    "recovery": 0,
-    "mindfulness": 0,
-    "surfing": 0
-  },
-  {
-    "date": "2026-05-09",
-    "office": 0,
-    "home": 1181.3,
-    "commute": 0,
-    "social": 81.6,
-    "transport": 6.6,
-    "gym": 0,
-    "walking": 28.0,
-    "sleep": 429.7,
-    "shopping": 0,
-    "beach": 0,
-    "recovery": 0,
-    "mindfulness": 0,
-    "surfing": 28.2
-  },
-  {
-    "date": "2026-05-10",
-    "office": 532.0,
-    "home": 978.4,
-    "commute": 48.5,
-    "social": 0,
-    "transport": 61.8,
-    "gym": 155.4,
-    "walking": 143.5,
-    "sleep": 481.2,
-    "shopping": 0,
-    "beach": 0,
-    "recovery": 0,
-    "mindfulness": 0,
-    "surfing": 0
-  },
-  {
-    "date": "2026-05-11",
-    "office": 0,
-    "home": 1151.2,
-    "commute": 45.4,
-    "social": 10.0,
-    "transport": 47.5,
-    "gym": 60.5,
-    "walking": 135.8,
-    "sleep": 413.6,
-    "shopping": 0,
-    "beach": 0,
-    "recovery": 8.2,
-    "mindfulness": 0,
-    "surfing": 0
-  },
-  {
-    "date": "2026-05-12",
-    "office": 523.3,
-    "home": 694.9,
-    "commute": 233.2,
-    "social": 0,
-    "transport": 49.6,
-    "gym": 62.2,
-    "walking": 58.5,
-    "sleep": 423.6,
-    "shopping": 0,
-    "beach": 0,
-    "recovery": 0,
-    "mindfulness": 0,
-    "surfing": 0
-  },
-  {
-    "date": "2026-05-13",
-    "office": 563.0,
-    "home": 743.7,
-    "commute": 93.5,
-    "social": 0,
-    "transport": 60.2,
-    "gym": 45.1,
-    "walking": 26.5,
-    "sleep": 431.2,
-    "shopping": 18.0,
-    "beach": 0,
-    "recovery": 0,
-    "mindfulness": 0,
-    "surfing": 0
-  },
-  {
-    "date": "2026-05-14",
-    "office": 0,
-    "home": 1318.2,
-    "commute": 4.5,
-    "social": 11.8,
-    "transport": 24.2,
-    "gym": 82.3,
-    "walking": 49.9,
-    "sleep": 420.4,
-    "shopping": 0,
-    "beach": 0,
-    "recovery": 0,
-    "mindfulness": 0,
-    "surfing": 0
-  },
-  {
-    "date": "2026-05-15",
-    "office": 267.0,
-    "home": 598.4,
-    "commute": 18.5,
-    "social": 300.5,
-    "transport": 105.8,
-    "gym": 67.0,
-    "walking": 87.7,
-    "sleep": 360.0,
-    "shopping": 0,
-    "beach": 0,
-    "recovery": 0,
-    "mindfulness": 0,
-    "surfing": 0
-  },
-  {
-    "date": "2026-05-16",
-    "office": 0,
-    "home": 1003.5,
-    "commute": 182.6,
-    "social": 78.0,
-    "transport": 27.8,
-    "gym": 0,
-    "walking": 7.0,
-    "sleep": 628.6,
-    "shopping": 0,
-    "beach": 0,
-    "recovery": 0,
-    "mindfulness": 0,
-    "surfing": 0
-  },
-  {
-    "date": "2026-05-17",
-    "office": 0,
-    "home": 1612.0,
-    "commute": 0,
-    "social": 0,
-    "transport": 0,
-    "gym": 145.6,
-    "walking": 96.9,
-    "sleep": 406.7,
-    "shopping": 0,
-    "beach": 0,
-    "recovery": 0,
-    "mindfulness": 0,
-    "surfing": 0
-  },
-  {
-    "date": "2026-05-18",
-    "office": 552.4,
-    "home": 771.3,
-    "commute": 50.3,
-    "social": 0,
-    "transport": 49.4,
-    "gym": 69.3,
-    "walking": 22.4,
-    "sleep": 419.2,
-    "shopping": 11.9,
-    "beach": 0,
-    "recovery": 0,
-    "mindfulness": 0,
-    "surfing": 0
-  },
-  {
-    "date": "2026-05-19",
-    "office": 135.6,
-    "home": 689.6,
-    "commute": 130.1,
-    "social": 0,
-    "transport": 93.7,
-    "gym": 66.6,
-    "walking": 96.0,
-    "sleep": 445.1,
-    "shopping": 0,
-    "beach": 0,
-    "recovery": 0,
-    "mindfulness": 0,
-    "surfing": 0
-  },
-  {
-    "date": "2026-05-20",
-    "office": 904.3,
-    "home": 708.5,
-    "commute": 119.7,
-    "social": 0,
-    "transport": 102.1,
-    "gym": 76.6,
-    "walking": 71.9,
-    "sleep": 460.5,
-    "shopping": 0,
-    "beach": 0,
-    "recovery": 0,
-    "mindfulness": 0,
-    "surfing": 0
-  },
-  {
-    "date": "2026-05-21",
-    "office": 0,
-    "home": 1144.0,
-    "commute": 76.4,
-    "social": 0,
-    "transport": 20.4,
-    "gym": 85.5,
-    "walking": 111.6,
-    "sleep": 417.1,
-    "shopping": 0,
-    "beach": 0,
-    "recovery": 0,
-    "mindfulness": 0,
-    "surfing": 0
-  },
-  {
-    "date": "2026-05-22",
-    "office": 0,
-    "home": 992.8,
-    "commute": 75.2,
-    "social": 0,
-    "transport": 2.4,
-    "gym": 0,
-    "walking": 29.2,
-    "sleep": 550.9,
-    "shopping": 0,
-    "beach": 0,
-    "recovery": 0,
-    "mindfulness": 0,
-    "surfing": 0
-  },
-  {
-    "date": "2026-05-23",
-    "office": 0,
-    "home": 1260.1,
-    "commute": 0,
-    "social": 11.4,
-    "transport": 21.9,
-    "gym": 82.4,
-    "walking": 72.3,
-    "sleep": 556.8,
-    "shopping": 55.3,
-    "beach": 0,
-    "recovery": 0,
-    "mindfulness": 0,
-    "surfing": 0
-  },
-  {
-    "date": "2026-05-24",
-    "office": 543.1,
-    "home": 1117.0,
-    "commute": 28.3,
-    "social": 0,
-    "transport": 28.3,
-    "gym": 138.8,
-    "walking": 93.7,
-    "sleep": 432.2,
-    "shopping": 0,
-    "beach": 0,
-    "recovery": 0,
-    "mindfulness": 0,
-    "surfing": 0
-  },
-  {
-    "date": "2026-05-25",
-    "office": 0,
-    "home": 2001.9,
-    "commute": 53.6,
-    "social": 0,
-    "transport": 25.0,
-    "gym": 74.0,
-    "walking": 85.6,
-    "sleep": 413.8,
-    "shopping": 0,
-    "beach": 0,
-    "recovery": 0,
-    "mindfulness": 0,
-    "surfing": 0
-  },
-  {
-    "date": "2026-05-26",
-    "office": 0,
-    "home": 1358.4,
-    "commute": 0,
-    "social": 0,
-    "transport": 2.9,
-    "gym": 73.2,
-    "walking": 52.9,
-    "sleep": 414.4,
-    "shopping": 0,
-    "beach": 0,
-    "recovery": 0,
-    "mindfulness": 0,
-    "surfing": 0
-  },
-  {
-    "date": "2026-05-27",
-    "office": 0,
-    "home": 1423.2,
-    "commute": 0,
-    "social": 0,
-    "transport": 0,
-    "gym": 0,
-    "walking": 59.9,
-    "sleep": 406.4,
-    "shopping": 0,
-    "beach": 0,
-    "recovery": 0,
-    "mindfulness": 0,
-    "surfing": 0
-  },
-  {
-    "date": "2026-05-28",
-    "office": 0,
-    "home": 202.7,
-    "commute": 0,
-    "social": 0,
-    "transport": 0,
-    "gym": 42.4,
-    "walking": 71.7,
-    "sleep": 414.0,
-    "shopping": 0,
-    "beach": 0,
-    "recovery": 0,
-    "mindfulness": 0,
-    "surfing": 0
-  },
-  {
-    "date": "2026-05-29",
-    "office": 0,
-    "home": 1077.4,
-    "commute": 0,
-    "social": 135.9,
-    "transport": 2.0,
-    "gym": 81.6,
-    "walking": 47.0,
-    "sleep": 572.5,
-    "shopping": 0,
-    "beach": 0,
-    "recovery": 0,
-    "mindfulness": 0,
-    "surfing": 0
-  },
-  {
-    "date": "2026-05-30",
-    "office": 0,
-    "home": 292.8,
-    "commute": 42.5,
-    "social": 18.5,
-    "transport": 0,
-    "gym": 0,
-    "walking": 145.2,
-    "sleep": 0,
-    "shopping": 0,
-    "beach": 0,
-    "recovery": 0,
-    "mindfulness": 0,
-    "surfing": 35.0
-  },
-  {
-    "date": "2026-06-01",
-    "office": 539.0,
-    "home": 583.4,
-    "commute": 113.6,
-    "social": 0.0,
-    "transport": 94.8,
-    "gym": 70.2,
-    "walking": 37.8,
-    "sleep": 389.1,
-    "shopping": 0.0,
-    "beach": 0.0,
-    "recovery": 0.0,
-    "mindfulness": 0.0,
-    "surfing": 0.0
-  },
-  {
-    "date": "2026-06-02",
-    "office": 219.3,
-    "home": 683.5,
-    "commute": 0.0,
-    "social": 23.4,
-    "transport": 601.9,
-    "gym": 43.5,
-    "walking": 5.1,
-    "sleep": 410.7,
-    "shopping": 0.0,
-    "beach": 0.0,
-    "recovery": 0.0,
-    "mindfulness": 0.0,
-    "surfing": 0.0
-  },
-  {
-    "date": "2026-06-03",
-    "office": 0.0,
-    "home": 1382.4,
-    "commute": 0.0,
-    "social": 0.0,
-    "transport": 0.0,
-    "gym": 0.0,
-    "walking": 59.3,
-    "sleep": 413.8,
-    "shopping": 0.0,
-    "beach": 0.0,
-    "recovery": 0.0,
-    "mindfulness": 0.0,
-    "surfing": 0.0
-  },
-  {
-    "date": "2026-06-04",
-    "office": 634.1,
-    "home": 779.1,
-    "commute": 71.9,
-    "social": 0.0,
-    "transport": 58.8,
-    "gym": 0.0,
-    "walking": 22.4,
-    "sleep": 430.4,
-    "shopping": 0.0,
-    "beach": 0.0,
-    "recovery": 0.0,
-    "mindfulness": 0.0,
-    "surfing": 0.0
-  },
-  {
-    "date": "2026-06-05",
-    "office": 0.0,
-    "home": 1406.7,
-    "commute": 0.0,
-    "social": 25.2,
-    "transport": 3.7,
-    "gym": 0.0,
-    "walking": 108.8,
-    "sleep": 360.0,
-    "shopping": 0.0,
-    "beach": 0.0,
-    "recovery": 0.0,
-    "mindfulness": 0.0,
-    "surfing": 0.0
-  },
-  {
-    "date": "2026-06-06",
-    "office": 0.0,
-    "home": 0.0,
-    "commute": 0.0,
-    "social": 0.0,
-    "transport": 0.0,
-    "gym": 33.6,
-    "walking": 20.6,
-    "sleep": 0.0,
-    "shopping": 0.0,
-    "beach": 0.0,
-    "recovery": 0.0,
-    "mindfulness": 0.0,
-    "surfing": 0.0
-  },
-  {
-    "date": "2026-06-07",
-    "office": 0.0,
-    "home": 986.9,
-    "commute": 0.0,
-    "social": 263.8,
-    "transport": 27.4,
-    "gym": 112.2,
-    "walking": 87.6,
-    "sleep": 493.5,
-    "shopping": 53.0,
-    "beach": 0.0,
-    "recovery": 0.0,
-    "mindfulness": 0.0,
-    "surfing": 0.0
-  },
-  {
-    "date": "2026-06-08",
-    "office": 0.0,
-    "home": 1365.0,
-    "commute": 0.0,
-    "social": 0.0,
-    "transport": 0.0,
-    "gym": 59.6,
-    "walking": 108.2,
-    "sleep": 477.1,
-    "shopping": 0.0,
-    "beach": 0.0,
-    "recovery": 0.0,
-    "mindfulness": 0.0,
-    "surfing": 0.0
-  },
-  {
-    "date": "2026-06-09",
-    "office": 555.0,
-    "home": 704.9,
-    "commute": 111.9,
-    "social": 0.0,
-    "transport": 97.7,
-    "gym": 80.7,
-    "walking": 39.4,
-    "sleep": 415.7,
-    "shopping": 7.5,
-    "beach": 0.0,
-    "recovery": 0.0,
-    "mindfulness": 0.0,
-    "surfing": 0.0
-  },
-  {
-    "date": "2026-06-10",
-    "office": 546.9,
-    "home": 714.3,
-    "commute": 107.6,
-    "social": 0.0,
-    "transport": 152.1,
-    "gym": 87.6,
-    "walking": 31.6,
-    "sleep": 436.5,
-    "shopping": 0.0,
-    "beach": 0.0,
-    "recovery": 0.0,
-    "mindfulness": 0.0,
-    "surfing": 0.0
-  },
-  {
-    "date": "2026-06-11",
-    "office": 618.2,
-    "home": 655.8,
-    "commute": 86.6,
-    "social": 0.0,
-    "transport": 130.2,
-    "gym": 111.0,
-    "walking": 30.3,
-    "sleep": 418.5,
-    "shopping": 0.0,
-    "beach": 0.0,
-    "recovery": 0.0,
-    "mindfulness": 0.0,
-    "surfing": 0.0
-  },
-  {
-    "date": "2026-06-12",
-    "office": 0.0,
-    "home": 1278.4,
-    "commute": 0.0,
-    "social": 83.3,
-    "transport": 16.1,
-    "gym": 75.7,
-    "walking": 65.1,
-    "sleep": 402.4,
-    "shopping": 6.1,
-    "beach": 0.0,
-    "recovery": 0.0,
-    "mindfulness": 0.0,
-    "surfing": 0.0
-  },
-  {
-    "date": "2026-06-13",
-    "office": 0.0,
-    "home": 1318.0,
-    "commute": 0.0,
-    "social": 0.0,
-    "transport": 0.0,
-    "gym": 37.4,
-    "walking": 145.0,
-    "sleep": 388.2,
-    "shopping": 9.3,
-    "beach": 0.0,
-    "recovery": 0.0,
-    "mindfulness": 0.0,
-    "surfing": 0.0
-  },
-  {
-    "date": "2026-06-14",
-    "office": 0.0,
-    "home": 1120.2,
-    "commute": 0.0,
-    "social": 85.6,
-    "transport": 14.9,
-    "gym": 128.1,
-    "walking": 109.5,
-    "sleep": 544.0,
-    "shopping": 40.1,
-    "beach": 0.0,
-    "recovery": 0.0,
-    "mindfulness": 0.0,
-    "surfing": 0.0
-  },
-  {
-    "date": "2026-06-15",
-    "office": 565.0,
-    "home": 665.0,
-    "commute": 131.2,
-    "social": 0.0,
-    "transport": 133.1,
-    "gym": 105.3,
-    "walking": 38.8,
-    "sleep": 422.5,
-    "shopping": 6.9,
-    "beach": 0.0,
-    "recovery": 0.0,
-    "mindfulness": 0.0,
-    "surfing": 0.0
-  },
-  {
-    "date": "2026-06-16",
-    "office": 531.7,
-    "home": 712.6,
-    "commute": 111.1,
-    "social": 0.0,
-    "transport": 107.2,
-    "gym": 116.2,
-    "walking": 41.2,
-    "sleep": 330.5,
-    "shopping": 0.0,
-    "beach": 0.0,
-    "recovery": 0.0,
-    "mindfulness": 0.0,
-    "surfing": 0.0
-  },
-  {
-    "date": "2026-06-17",
-    "office": 0.0,
-    "home": 1404.0,
-    "commute": 0.0,
-    "social": 0.0,
-    "transport": 0.0,
-    "gym": 43.6,
-    "walking": 64.3,
-    "sleep": 46.2,
-    "shopping": 0.0,
-    "beach": 0.0,
-    "recovery": 0.0,
-    "mindfulness": 0.0,
-    "surfing": 0.0
-  },
-  {
-    "date": "2026-06-18",
-    "office": 508.2,
-    "home": 723.6,
-    "commute": 126.5,
-    "social": 0.0,
-    "transport": 129.9,
-    "gym": 99.4,
-    "walking": 39.4,
-    "sleep": 398.8,
-    "shopping": 0.0,
-    "beach": 0.0,
-    "recovery": 0.0,
-    "mindfulness": 0.0,
-    "surfing": 0.0
-  },
-  {
-    "date": "2026-06-19",
-    "office": 517.3,
-    "home": 649.0,
-    "commute": 111.7,
-    "social": 82.1,
-    "transport": 115.5,
-    "gym": 97.1,
-    "walking": 55.3,
-    "sleep": 379.1,
-    "shopping": 0.0,
-    "beach": 0.0,
-    "recovery": 0.0,
-    "mindfulness": 0.0,
-    "surfing": 0.0
-  },
-  {
-    "date": "2026-06-20",
-    "office": 0.0,
-    "home": 1396.3,
-    "commute": 0.0,
-    "social": 32.1,
-    "transport": 0.0,
-    "gym": 54.9,
-    "walking": 87.5,
-    "sleep": 361.1,
-    "shopping": 0.0,
-    "beach": 0.0,
-    "recovery": 0.0,
-    "mindfulness": 0.0,
-    "surfing": 0.0
-  },
-  {
-    "date": "2026-06-21",
-    "office": 0.0,
-    "home": 1184.8,
-    "commute": 0.0,
-    "social": 129.3,
-    "transport": 35.9,
-    "gym": 119.4,
-    "walking": 77.7,
-    "sleep": 376.1,
-    "shopping": 0.0,
-    "beach": 0.0,
-    "recovery": 0.0,
-    "mindfulness": 0.0,
-    "surfing": 0.0
-  },
-  {
-    "date": "2026-06-22",
-    "office": 519.5,
-    "home": 737.4,
-    "commute": 104.6,
-    "social": 0.0,
-    "transport": 111.2,
-    "gym": 109.3,
-    "walking": 34.3,
-    "sleep": 439.1,
-    "shopping": 0.0,
-    "beach": 0.0,
-    "recovery": 0.0,
-    "mindfulness": 0.0,
-    "surfing": 0.0
-  },
-  {
-    "date": "2026-06-23",
-    "office": 0.0,
-    "home": 408.1,
-    "commute": 0.0,
-    "social": 0.0,
-    "transport": 0.0,
-    "gym": 10.2,
-    "walking": 11.5,
-    "sleep": 330.3,
-    "shopping": 0.0,
-    "beach": 0.0,
-    "recovery": 0.0,
-    "mindfulness": 0.0,
-    "surfing": 0.0
-  }
+  {"date": "2026-05-01","office": 0,"home": 0,"commute": 0,"social": 0,"transport": 0,"gym": 81.9,"walking": 24.8,"sleep": 438.7,"shopping": 0,"beach": 0,"recovery": 0,"mindfulness": 0,"surfing": 29.1},
+  {"date": "2026-05-02","office": 0,"home": 841.1,"commute": 111.0,"social": 288.6,"transport": 70.0,"gym": 0,"walking": 99.0,"sleep": 659.0,"shopping": 0,"beach": 112.0,"recovery": 0,"mindfulness": 0,"surfing": 0},
+  {"date": "2026-05-03","office": 225.5,"home": 782.0,"commute": 62.0,"social": 0,"transport": 95.0,"gym": 163.4,"walking": 79.6,"sleep": 474.1,"shopping": 23.2,"beach": 22.9,"recovery": 0,"mindfulness": 0,"surfing": 0},
+  {"date": "2026-05-04","office": 854.7,"home": 682.9,"commute": 122.4,"social": 0,"transport": 92.8,"gym": 65.6,"walking": 55.2,"sleep": 421.5,"shopping": 0,"beach": 0,"recovery": 0,"mindfulness": 0,"surfing": 0},
+  {"date": "2026-05-05","office": 0,"home": 2008.8,"commute": 73.2,"social": 0,"transport": 41.8,"gym": 61.1,"walking": 90.0,"sleep": 443.1,"shopping": 0,"beach": 0,"recovery": 0,"mindfulness": 0,"surfing": 0},
+  {"date": "2026-05-06","office": 547.0,"home": 33.5,"commute": 31.4,"social": 0,"transport": 36.6,"gym": 69.7,"walking": 30.2,"sleep": 434.6,"shopping": 0,"beach": 0,"recovery": 0,"mindfulness": 0,"surfing": 27.1},
+  {"date": "2026-05-07","office": 0,"home": 1313.5,"commute": 58.4,"social": 0,"transport": 29.6,"gym": 81.5,"walking": 81.3,"sleep": 407.0,"shopping": 0,"beach": 0,"recovery": 0,"mindfulness": 0,"surfing": 0},
+  {"date": "2026-05-08","office": 0,"home": 919.1,"commute": 75.4,"social": 0,"transport": 3.5,"gym": 76.4,"walking": 61.8,"sleep": 468.2,"shopping": 0,"beach": 0,"recovery": 0,"mindfulness": 0,"surfing": 0},
+  {"date": "2026-05-09","office": 0,"home": 1181.3,"commute": 0,"social": 81.6,"transport": 6.6,"gym": 0,"walking": 28.0,"sleep": 429.7,"shopping": 0,"beach": 0,"recovery": 0,"mindfulness": 0,"surfing": 28.2},
+  {"date": "2026-05-10","office": 532.0,"home": 978.4,"commute": 48.5,"social": 0,"transport": 61.8,"gym": 155.4,"walking": 143.5,"sleep": 481.2,"shopping": 0,"beach": 0,"recovery": 0,"mindfulness": 0,"surfing": 0},
+  {"date": "2026-05-11","office": 0,"home": 1151.2,"commute": 45.4,"social": 10.0,"transport": 47.5,"gym": 60.5,"walking": 135.8,"sleep": 413.6,"shopping": 0,"beach": 0,"recovery": 8.2,"mindfulness": 0,"surfing": 0},
+  {"date": "2026-05-12","office": 523.3,"home": 694.9,"commute": 233.2,"social": 0,"transport": 49.6,"gym": 62.2,"walking": 58.5,"sleep": 423.6,"shopping": 0,"beach": 0,"recovery": 0,"mindfulness": 0,"surfing": 0},
+  {"date": "2026-05-13","office": 563.0,"home": 743.7,"commute": 93.5,"social": 0,"transport": 60.2,"gym": 45.1,"walking": 26.5,"sleep": 431.2,"shopping": 18.0,"beach": 0,"recovery": 0,"mindfulness": 0,"surfing": 0},
+  {"date": "2026-05-14","office": 0,"home": 1318.2,"commute": 4.5,"social": 11.8,"transport": 24.2,"gym": 82.3,"walking": 49.9,"sleep": 420.4,"shopping": 0,"beach": 0,"recovery": 0,"mindfulness": 0,"surfing": 0},
+  {"date": "2026-05-15","office": 267.0,"home": 598.4,"commute": 18.5,"social": 300.5,"transport": 105.8,"gym": 67.0,"walking": 87.7,"sleep": 360.0,"shopping": 0,"beach": 0,"recovery": 0,"mindfulness": 0,"surfing": 0},
+  {"date": "2026-05-16","office": 0,"home": 1003.5,"commute": 182.6,"social": 78.0,"transport": 27.8,"gym": 0,"walking": 7.0,"sleep": 628.6,"shopping": 0,"beach": 0,"recovery": 0,"mindfulness": 0,"surfing": 0},
+  {"date": "2026-05-17","office": 0,"home": 1612.0,"commute": 0,"social": 0,"transport": 0,"gym": 145.6,"walking": 96.9,"sleep": 406.7,"shopping": 0,"beach": 0,"recovery": 0,"mindfulness": 0,"surfing": 0},
+  {"date": "2026-05-18","office": 552.4,"home": 771.3,"commute": 50.3,"social": 0,"transport": 49.4,"gym": 69.3,"walking": 22.4,"sleep": 419.2,"shopping": 11.9,"beach": 0,"recovery": 0,"mindfulness": 0,"surfing": 0},
+  {"date": "2026-05-19","office": 135.6,"home": 689.6,"commute": 130.1,"social": 0,"transport": 93.7,"gym": 66.6,"walking": 96.0,"sleep": 445.1,"shopping": 0,"beach": 0,"recovery": 0,"mindfulness": 0,"surfing": 0},
+  {"date": "2026-05-20","office": 904.3,"home": 708.5,"commute": 119.7,"social": 0,"transport": 102.1,"gym": 76.6,"walking": 71.9,"sleep": 460.5,"shopping": 0,"beach": 0,"recovery": 0,"mindfulness": 0,"surfing": 0},
+  {"date": "2026-05-21","office": 0,"home": 1144.0,"commute": 76.4,"social": 0,"transport": 20.4,"gym": 85.5,"walking": 111.6,"sleep": 417.1,"shopping": 0,"beach": 0,"recovery": 0,"mindfulness": 0,"surfing": 0},
+  {"date": "2026-05-22","office": 0,"home": 992.8,"commute": 75.2,"social": 0,"transport": 2.4,"gym": 0,"walking": 29.2,"sleep": 550.9,"shopping": 0,"beach": 0,"recovery": 0,"mindfulness": 0,"surfing": 0},
+  {"date": "2026-05-23","office": 0,"home": 1260.1,"commute": 0,"social": 11.4,"transport": 21.9,"gym": 82.4,"walking": 72.3,"sleep": 556.8,"shopping": 55.3,"beach": 0,"recovery": 0,"mindfulness": 0,"surfing": 0},
+  {"date": "2026-05-24","office": 543.1,"home": 1117.0,"commute": 28.3,"social": 0,"transport": 28.3,"gym": 138.8,"walking": 93.7,"sleep": 432.2,"shopping": 0,"beach": 0,"recovery": 0,"mindfulness": 0,"surfing": 0},
+  {"date": "2026-05-25","office": 0,"home": 2001.9,"commute": 53.6,"social": 0,"transport": 25.0,"gym": 74.0,"walking": 85.6,"sleep": 413.8,"shopping": 0,"beach": 0,"recovery": 0,"mindfulness": 0,"surfing": 0},
+  {"date": "2026-05-26","office": 0,"home": 1358.4,"commute": 0,"social": 0,"transport": 2.9,"gym": 73.2,"walking": 52.9,"sleep": 414.4,"shopping": 0,"beach": 0,"recovery": 0,"mindfulness": 0,"surfing": 0},
+  {"date": "2026-05-27","office": 0,"home": 1423.2,"commute": 0,"social": 0,"transport": 0,"gym": 0,"walking": 59.9,"sleep": 406.4,"shopping": 0,"beach": 0,"recovery": 0,"mindfulness": 0,"surfing": 0},
+  {"date": "2026-05-28","office": 0,"home": 202.7,"commute": 0,"social": 0,"transport": 0,"gym": 42.4,"walking": 71.7,"sleep": 414.0,"shopping": 0,"beach": 0,"recovery": 0,"mindfulness": 0,"surfing": 0},
+  {"date": "2026-05-29","office": 0,"home": 1077.4,"commute": 0,"social": 135.9,"transport": 2.0,"gym": 81.6,"walking": 47.0,"sleep": 572.5,"shopping": 0,"beach": 0,"recovery": 0,"mindfulness": 0,"surfing": 0},
+  {"date": "2026-05-30","office": 0,"home": 292.8,"commute": 42.5,"social": 18.5,"transport": 0,"gym": 0,"walking": 145.2,"sleep": 0,"shopping": 0,"beach": 0,"recovery": 0,"mindfulness": 0,"surfing": 35.0},
+  {"date": "2026-06-01","office": 539.0,"home": 583.4,"commute": 113.6,"social": 0.0,"transport": 94.8,"gym": 70.2,"walking": 37.8,"sleep": 389.1,"shopping": 0.0,"beach": 0.0,"recovery": 0.0,"mindfulness": 0.0,"surfing": 0.0},
+  {"date": "2026-06-02","office": 219.3,"home": 683.5,"commute": 0.0,"social": 23.4,"transport": 601.9,"gym": 43.5,"walking": 5.1,"sleep": 410.7,"shopping": 0.0,"beach": 0.0,"recovery": 0.0,"mindfulness": 0.0,"surfing": 0.0},
+  {"date": "2026-06-03","office": 0.0,"home": 1382.4,"commute": 0.0,"social": 0.0,"transport": 0.0,"gym": 0.0,"walking": 59.3,"sleep": 413.8,"shopping": 0.0,"beach": 0.0,"recovery": 0.0,"mindfulness": 0.0,"surfing": 0.0},
+  {"date": "2026-06-04","office": 634.1,"home": 779.1,"commute": 71.9,"social": 0.0,"transport": 58.8,"gym": 0.0,"walking": 22.4,"sleep": 430.4,"shopping": 0.0,"beach": 0.0,"recovery": 0.0,"mindfulness": 0.0,"surfing": 0.0},
+  {"date": "2026-06-05","office": 0.0,"home": 1406.7,"commute": 0.0,"social": 25.2,"transport": 3.7,"gym": 0.0,"walking": 108.8,"sleep": 360.0,"shopping": 0.0,"beach": 0.0,"recovery": 0.0,"mindfulness": 0.0,"surfing": 0.0},
+  {"date": "2026-06-06","office": 0.0,"home": 0.0,"commute": 0.0,"social": 0.0,"transport": 0.0,"gym": 33.6,"walking": 20.6,"sleep": 0.0,"shopping": 0.0,"beach": 0.0,"recovery": 0.0,"mindfulness": 0.0,"surfing": 0.0},
+  {"date": "2026-06-07","office": 0.0,"home": 986.9,"commute": 0.0,"social": 263.8,"transport": 27.4,"gym": 112.2,"walking": 87.6,"sleep": 493.5,"shopping": 53.0,"beach": 0.0,"recovery": 0.0,"mindfulness": 0.0,"surfing": 0.0},
+  {"date": "2026-06-08","office": 0.0,"home": 1365.0,"commute": 0.0,"social": 0.0,"transport": 0.0,"gym": 59.6,"walking": 108.2,"sleep": 477.1,"shopping": 0.0,"beach": 0.0,"recovery": 0.0,"mindfulness": 0.0,"surfing": 0.0},
+  {"date": "2026-06-09","office": 555.0,"home": 704.9,"commute": 111.9,"social": 0.0,"transport": 97.7,"gym": 80.7,"walking": 39.4,"sleep": 415.7,"shopping": 7.5,"beach": 0.0,"recovery": 0.0,"mindfulness": 0.0,"surfing": 0.0},
+  {"date": "2026-06-10","office": 546.9,"home": 714.3,"commute": 107.6,"social": 0.0,"transport": 152.1,"gym": 87.6,"walking": 31.6,"sleep": 436.5,"shopping": 0.0,"beach": 0.0,"recovery": 0.0,"mindfulness": 0.0,"surfing": 0.0},
+  {"date": "2026-06-11","office": 618.2,"home": 655.8,"commute": 86.6,"social": 0.0,"transport": 130.2,"gym": 111.0,"walking": 30.3,"sleep": 418.5,"shopping": 0.0,"beach": 0.0,"recovery": 0.0,"mindfulness": 0.0,"surfing": 0.0},
+  {"date": "2026-06-12","office": 0.0,"home": 1278.4,"commute": 0.0,"social": 83.3,"transport": 16.1,"gym": 75.7,"walking": 65.1,"sleep": 402.4,"shopping": 6.1,"beach": 0.0,"recovery": 0.0,"mindfulness": 0.0,"surfing": 0.0},
+  {"date": "2026-06-13","office": 0.0,"home": 1318.0,"commute": 0.0,"social": 0.0,"transport": 0.0,"gym": 37.4,"walking": 145.0,"sleep": 388.2,"shopping": 9.3,"beach": 0.0,"recovery": 0.0,"mindfulness": 0.0,"surfing": 0.0},
+  {"date": "2026-06-14","office": 0.0,"home": 1120.2,"commute": 0.0,"social": 85.6,"transport": 14.9,"gym": 128.1,"walking": 109.5,"sleep": 544.0,"shopping": 40.1,"beach": 0.0,"recovery": 0.0,"mindfulness": 0.0,"surfing": 0.0},
+  {"date": "2026-06-15","office": 565.0,"home": 665.0,"commute": 131.2,"social": 0.0,"transport": 133.1,"gym": 105.3,"walking": 38.8,"sleep": 422.5,"shopping": 6.9,"beach": 0.0,"recovery": 0.0,"mindfulness": 0.0,"surfing": 0.0},
+  {"date": "2026-06-16","office": 531.7,"home": 712.6,"commute": 111.1,"social": 0.0,"transport": 107.2,"gym": 116.2,"walking": 41.2,"sleep": 330.5,"shopping": 0.0,"beach": 0.0,"recovery": 0.0,"mindfulness": 0.0,"surfing": 0.0},
+  {"date": "2026-06-17","office": 0.0,"home": 1404.0,"commute": 0.0,"social": 0.0,"transport": 0.0,"gym": 43.6,"walking": 64.3,"sleep": 46.2,"shopping": 0.0,"beach": 0.0,"recovery": 0.0,"mindfulness": 0.0,"surfing": 0.0},
+  {"date": "2026-06-18","office": 508.2,"home": 723.6,"commute": 126.5,"social": 0.0,"transport": 129.9,"gym": 99.4,"walking": 39.4,"sleep": 398.8,"shopping": 0.0,"beach": 0.0,"recovery": 0.0,"mindfulness": 0.0,"surfing": 0.0},
+  {"date": "2026-06-19","office": 517.3,"home": 649.0,"commute": 111.7,"social": 82.1,"transport": 115.5,"gym": 97.1,"walking": 55.3,"sleep": 379.1,"shopping": 0.0,"beach": 0.0,"recovery": 0.0,"mindfulness": 0.0,"surfing": 0.0},
+  {"date": "2026-06-20","office": 0.0,"home": 1396.3,"commute": 0.0,"social": 32.1,"transport": 0.0,"gym": 54.9,"walking": 87.5,"sleep": 361.1,"shopping": 0.0,"beach": 0.0,"recovery": 0.0,"mindfulness": 0.0,"surfing": 0.0},
+  {"date": "2026-06-21","office": 0.0,"home": 1184.8,"commute": 0.0,"social": 129.3,"transport": 35.9,"gym": 119.4,"walking": 77.7,"sleep": 376.1,"shopping": 0.0,"beach": 0.0,"recovery": 0.0,"mindfulness": 0.0,"surfing": 0.0},
+  {"date": "2026-06-22","office": 519.5,"home": 737.4,"commute": 104.6,"social": 0.0,"transport": 111.2,"gym": 109.3,"walking": 34.3,"sleep": 439.1,"shopping": 0.0,"beach": 0.0,"recovery": 0.0,"mindfulness": 0.0,"surfing": 0.0},
+  {"date": "2026-06-23","office": 0.0,"home": 408.1,"commute": 0.0,"social": 0.0,"transport": 0.0,"gym": 10.2,"walking": 11.5,"sleep": 330.3,"shopping": 0.0,"beach": 0.0,"recovery": 0.0,"mindfulness": 0.0,"surfing": 0.0},
+  {"date": "2026-06-24","office": 190.7,"home": 1015.3,"commute": 94.4,"social": 0.0,"transport": 102.3,"gym": 110.2,"walking": 121.2,"sleep": 393.3,"shopping": 6.1,"beach": 0.0,"recovery": 0.0,"mindfulness": 0.0,"surfing": 0.0},
+  {"date": "2026-06-25","office": 559.2,"home": 733.7,"commute": 89.7,"social": 0.0,"transport": 99.5,"gym": 102.0,"walking": 28.8,"sleep": 399.7,"shopping": 0.0,"beach": 0.0,"recovery": 0.0,"mindfulness": 0.0,"surfing": 0.0},
+  {"date": "2026-06-26","office": 0.0,"home": 1587.1,"commute": 0.0,"social": 0.0,"transport": 0.0,"gym": 34.0,"walking": 66.5,"sleep": 471.2,"shopping": 0.0,"beach": 0.0,"recovery": 0.0,"mindfulness": 0.0,"surfing": 0.0},
+  {"date": "2026-06-27","office": 0.0,"home": 1140.8,"commute": 0.0,"social": 145.7,"transport": 24.8,"gym": 116.8,"walking": 79.8,"sleep": 462.0,"shopping": 25.2,"beach": 0.0,"recovery": 0.0,"mindfulness": 0.0,"surfing": 30.8},
+  {"date": "2026-06-28","office": 0.0,"home": 988.5,"commute": 0.0,"social": 0.0,"transport": 45.4,"gym": 122.6,"walking": 22.7,"sleep": 414.3,"shopping": 64.4,"beach": 0.0,"recovery": 0.0,"mindfulness": 0.0,"surfing": 0.0,"cycling": 0.0},
+  {"date": "2026-06-29","office": 562.3,"home": 713.3,"commute": 109.5,"social": 11.2,"transport": 74.4,"gym": 100.3,"walking": 75.6,"sleep": 428.7,"shopping": 4.4,"beach": 0.0,"recovery": 0.0,"mindfulness": 0.0,"surfing": 0.0,"cycling": 25.4},
+  {"date": "2026-06-30","office": 0.0,"home": 1336.3,"commute": 0.0,"social": 0.0,"transport": 3.5,"gym": 30.2,"walking": 55.6,"sleep": 392.5,"shopping": 0.0,"beach": 0.0,"recovery": 0.0,"mindfulness": 0.0,"surfing": 0.0,"cycling": 6.2},
+  {"date": "2026-07-01","office": 522.02,"home": 704.67,"commute": 120.47,"social": 81.2,"transport": 99.18,"gym": 43.53,"walking": 60.4,"sleep": 423.67,"shopping": 0.0,"beach": 0.0,"recovery": 0.0,"mindfulness": 0.0,"surfing": 0.0,"cycling": 51.4},
+  {"date": "2026-07-02","office": 479.92,"home": 794.65,"commute": 114.7,"social": 79.65,"transport": 85.82,"gym": 39.15,"walking": 46.9,"sleep": 368.63,"shopping": 0.0,"beach": 0.0,"recovery": 0.0,"mindfulness": 0.0,"surfing": 0.0,"cycling": 21.5},
+  {"date": "2026-07-03","office": 136.3,"home": 1009.57,"commute": 23.13,"social": 0.0,"transport": 10.98,"gym": 112.6,"walking": 31.97,"sleep": 369.07,"shopping": 12.68,"beach": 0.0,"recovery": 0.0,"mindfulness": 0.0,"surfing": 0.0,"cycling": 18.18},
+  {"date": "2026-07-04","office": 0.0,"home": 36.7,"commute": 0.0,"social": 0.0,"transport": 1803.43,"gym": 65.4,"walking": 149.28,"sleep": 0.0,"shopping": 0.0,"beach": 0.0,"recovery": 0.0,"mindfulness": 0.0,"surfing": 0.0,"cycling": 14.98},
+  {"date": "2026-07-05","office": 0.0,"home": 248.45,"commute": 0.0,"social": 280.65,"transport": 87.38,"gym": 180.67,"walking": 121.65,"sleep": 0.0,"shopping": 0.0,"beach": 0.0,"recovery": 0.0,"mindfulness": 0.0,"surfing": 0.0,"cycling": 0.0}
   ];
 
 var monthlyLC = [
-  {
-    "m": "2025-03",
-    "office": 261.6,
-    "home": 884.5,
-    "commute": 59.0,
-    "social": 47.4,
-    "transport": 41.8,
-    "gym": 51.6,
-    "walking": 88.2,
-    "sleep_lc": 480.2,
-    "yoga": 64.3,
-    "shopping": 1.4,
-    "beach": 15.8,
-    "recovery": 0.0,
-    "mindfulness": 0.0,
-    "surfing": 0.9
-  },
-  {
-    "m": "2025-04",
-    "office": 182.1,
-    "home": 910.1,
-    "commute": 45.6,
-    "social": 37.6,
-    "transport": 30.7,
-    "gym": 42.7,
-    "walking": 104.5,
-    "sleep_lc": 478.0,
-    "yoga": 121.6,
-    "shopping": 7.7,
-    "beach": 10.3,
-    "recovery": 2.5,
-    "mindfulness": 0.0,
-    "surfing": 3.2
-  },
-  {
-    "m": "2025-05",
-    "office": 101.3,
-    "home": 647.9,
-    "commute": 36.9,
-    "social": 63.7,
-    "transport": 59.6,
-    "gym": 30.9,
-    "walking": 61.7,
-    "sleep_lc": 468.0,
-    "yoga": 40.9,
-    "shopping": 5.5,
-    "beach": 38.7,
-    "recovery": 0.0,
-    "mindfulness": 0.0,
-    "surfing": 0.0
-  },
-  {
-    "m": "2025-06",
-    "office": 249.4,
-    "home": 954.0,
-    "commute": 57.5,
-    "social": 64.8,
-    "transport": 38.8,
-    "gym": 45.5,
-    "walking": 71.5,
-    "sleep_lc": 499.3,
-    "yoga": 31.5,
-    "shopping": 8.7,
-    "beach": 86.4,
-    "recovery": 2.0,
-    "mindfulness": 1.3,
-    "surfing": 0.0
-  },
-  {
-    "m": "2025-07",
-    "office": 229.7,
-    "home": 757.1,
-    "commute": 51.7,
-    "social": 32.9,
-    "transport": 48.4,
-    "gym": 66.1,
-    "walking": 67.9,
-    "sleep_lc": 481.0,
-    "yoga": 22.7,
-    "shopping": 7.5,
-    "beach": 39.2,
-    "recovery": 2.3,
-    "mindfulness": 1.3,
-    "surfing": 0.0
-  },
-  {
-    "m": "2025-08",
-    "office": 287.3,
-    "home": 877.9,
-    "commute": 38.6,
-    "social": 29.4,
-    "transport": 38.6,
-    "gym": 72.6,
-    "walking": 72.5,
-    "sleep_lc": 479.0,
-    "yoga": 0.0,
-    "shopping": 4.1,
-    "beach": 1.8,
-    "recovery": 0.0,
-    "mindfulness": 0.0,
-    "surfing": 0.0
-  },
-  {
-    "m": "2025-09",
-    "office": 263.6,
-    "home": 904.8,
-    "commute": 77.8,
-    "social": 26.5,
-    "transport": 33.5,
-    "gym": 46.0,
-    "walking": 80.2,
-    "sleep_lc": 468.6,
-    "yoga": 8.1,
-    "shopping": 8.6,
-    "beach": 9.0,
-    "recovery": 0.0,
-    "mindfulness": 0.0,
-    "surfing": 0.0
-  },
-  {
-    "m": "2025-10",
-    "office": 249.6,
-    "home": 919.2,
-    "commute": 55.5,
-    "social": 27.9,
-    "transport": 36.8,
-    "gym": 50.8,
-    "walking": 74.4,
-    "sleep_lc": 464.5,
-    "yoga": 0.0,
-    "shopping": 4.0,
-    "beach": 37.4,
-    "recovery": 0.0,
-    "mindfulness": 0.0,
-    "surfing": 0.0
-  },
-  {
-    "m": "2025-11",
-    "office": 283.8,
-    "home": 915.2,
-    "commute": 36.2,
-    "social": 61.4,
-    "transport": 41.2,
-    "gym": 45.4,
-    "walking": 105.6,
-    "sleep_lc": 424.7,
-    "yoga": 0.0,
-    "shopping": 3.4,
-    "beach": 22.1,
-    "recovery": 0.0,
-    "mindfulness": 0.0,
-    "surfing": 0.0
-  },
-  {
-    "m": "2025-12",
-    "office": 137.0,
-    "home": 988.5,
-    "commute": 46.7,
-    "social": 14.8,
-    "transport": 53.3,
-    "gym": 50.4,
-    "walking": 65.8,
-    "sleep_lc": 432.2,
-    "yoga": 1.8,
-    "shopping": 8.7,
-    "beach": 54.6,
-    "recovery": 0.0,
-    "mindfulness": 0.0,
-    "surfing": 14.5
-  },
-  {
-    "m": "2026-01",
-    "office": 180.8,
-    "home": 1018.0,
-    "commute": 38.8,
-    "social": 14.4,
-    "transport": 32.5,
-    "gym": 45.6,
-    "walking": 86.0,
-    "sleep_lc": 441.4,
-    "yoga": 0.7,
-    "shopping": 12.4,
-    "beach": 38.6,
-    "recovery": 0.0,
-    "mindfulness": 0.0,
-    "surfing": 4.6
-  },
-  {
-    "m": "2026-02",
-    "office": 204.7,
-    "home": 799.9,
-    "commute": 30.4,
-    "social": 17.7,
-    "transport": 54.5,
-    "gym": 41.1,
-    "walking": 88.3,
-    "sleep_lc": 437.6,
-    "yoga": 0.9,
-    "shopping": 5.2,
-    "beach": 43.8,
-    "recovery": 0.0,
-    "mindfulness": 0.0,
-    "surfing": 0.0
-  },
-  {
-    "m": "2026-03",
-    "office": 224.6,
-    "home": 1016.1,
-    "commute": 51.0,
-    "social": 37.8,
-    "transport": 39.6,
-    "gym": 51.0,
-    "walking": 109.5,
-    "sleep_lc": 434.5,
-    "yoga": 0.0,
-    "shopping": 11.7,
-    "beach": 6.3,
-    "recovery": 3.9,
-    "mindfulness": 0.0,
-    "surfing": 4.6
-  },
-  {
-    "m": "2026-04",
-    "office": 218.5,
-    "home": 958.8,
-    "commute": 46.4,
-    "social": 48.0,
-    "transport": 33.1,
-    "gym": 59.6,
-    "walking": 111.7,
-    "sleep_lc": 420.7,
-    "yoga": 0.0,
-    "shopping": 2.0,
-    "beach": 2.5,
-    "recovery": 2.5,
-    "mindfulness": 0.0,
-    "surfing": 7.1
-  },
-  {
-    "m": "2026-05",
-    "office": 188.3,
-    "home": 963.4,
-    "commute": 57.9,
-    "social": 31.2,
-    "transport": 36.7,
-    "gym": 66.9,
-    "walking": 70.5,
-    "sleep_lc": 441.5,
-    "yoga": 0.0,
-    "shopping": 3.6,
-    "beach": 4.5,
-    "recovery": 0.3,
-    "mindfulness": 0.0,
-    "surfing": 4.0
-  },
-  {
-    "m": "2026-06",
-    "office": 250.2,
-    "home": 906.9,
-    "commute": 46.8,
-    "social": 31.5,
-    "transport": 79.6,
-    "gym": 69.3,
-    "walking": 57.4,
-    "sleep_lc": 376.7,
-    "yoga": 0.0,
-    "shopping": 5.3,
-    "beach": 0.0,
-    "recovery": 0.0,
-    "mindfulness": 0.0,
-    "surfing": 0.0
-  }
+  {"m": "2025-03","office": 261.6,"home": 884.5,"commute": 59.0,"social": 47.4,"transport": 41.8,"gym": 51.6,"walking": 88.2,"sleep_lc": 480.2,"yoga": 64.3,"shopping": 1.4,"beach": 15.8,"recovery": 0.0,"mindfulness": 0.0,"surfing": 0.9},
+  {"m": "2025-04","office": 182.1,"home": 910.1,"commute": 45.6,"social": 37.6,"transport": 30.7,"gym": 42.7,"walking": 104.5,"sleep_lc": 478.0,"yoga": 121.6,"shopping": 7.7,"beach": 10.3,"recovery": 2.5,"mindfulness": 0.0,"surfing": 3.2},
+  {"m": "2025-05","office": 101.3,"home": 647.9,"commute": 36.9,"social": 63.7,"transport": 59.6,"gym": 30.9,"walking": 61.7,"sleep_lc": 468.0,"yoga": 40.9,"shopping": 5.5,"beach": 38.7,"recovery": 0.0,"mindfulness": 0.0,"surfing": 0.0},
+  {"m": "2025-06","office": 249.4,"home": 954.0,"commute": 57.5,"social": 64.8,"transport": 38.8,"gym": 45.5,"walking": 71.5,"sleep_lc": 499.3,"yoga": 31.5,"shopping": 8.7,"beach": 86.4,"recovery": 2.0,"mindfulness": 1.3,"surfing": 0.0},
+  {"m": "2025-07","office": 229.7,"home": 757.1,"commute": 51.7,"social": 32.9,"transport": 48.4,"gym": 66.1,"walking": 67.9,"sleep_lc": 481.0,"yoga": 22.7,"shopping": 7.5,"beach": 39.2,"recovery": 2.3,"mindfulness": 1.3,"surfing": 0.0},
+  {"m": "2025-08","office": 287.3,"home": 877.9,"commute": 38.6,"social": 29.4,"transport": 38.6,"gym": 72.6,"walking": 72.5,"sleep_lc": 479.0,"yoga": 0.0,"shopping": 4.1,"beach": 1.8,"recovery": 0.0,"mindfulness": 0.0,"surfing": 0.0},
+  {"m": "2025-09","office": 263.6,"home": 904.8,"commute": 77.8,"social": 26.5,"transport": 33.5,"gym": 46.0,"walking": 80.2,"sleep_lc": 468.6,"yoga": 8.1,"shopping": 8.6,"beach": 9.0,"recovery": 0.0,"mindfulness": 0.0,"surfing": 0.0},
+  {"m": "2025-10","office": 249.6,"home": 919.2,"commute": 55.5,"social": 27.9,"transport": 36.8,"gym": 50.8,"walking": 74.4,"sleep_lc": 464.5,"yoga": 0.0,"shopping": 4.0,"beach": 37.4,"recovery": 0.0,"mindfulness": 0.0,"surfing": 0.0},
+  {"m": "2025-11","office": 283.8,"home": 915.2,"commute": 36.2,"social": 61.4,"transport": 41.2,"gym": 45.4,"walking": 105.6,"sleep_lc": 424.7,"yoga": 0.0,"shopping": 3.4,"beach": 22.1,"recovery": 0.0,"mindfulness": 0.0,"surfing": 0.0},
+  {"m": "2025-12","office": 137.0,"home": 988.5,"commute": 46.7,"social": 14.8,"transport": 53.3,"gym": 50.4,"walking": 65.8,"sleep_lc": 432.2,"yoga": 1.8,"shopping": 8.7,"beach": 54.6,"recovery": 0.0,"mindfulness": 0.0,"surfing": 14.5},
+  {"m": "2026-01","office": 180.8,"home": 1018.0,"commute": 38.8,"social": 14.4,"transport": 32.5,"gym": 45.6,"walking": 86.0,"sleep_lc": 441.4,"yoga": 0.7,"shopping": 12.4,"beach": 38.6,"recovery": 0.0,"mindfulness": 0.0,"surfing": 4.6},
+  {"m": "2026-02","office": 204.7,"home": 799.9,"commute": 30.4,"social": 17.7,"transport": 54.5,"gym": 41.1,"walking": 88.3,"sleep_lc": 437.6,"yoga": 0.9,"shopping": 5.2,"beach": 43.8,"recovery": 0.0,"mindfulness": 0.0,"surfing": 0.0},
+  {"m": "2026-03","office": 224.6,"home": 1016.1,"commute": 51.0,"social": 37.8,"transport": 39.6,"gym": 51.0,"walking": 109.5,"sleep_lc": 434.5,"yoga": 0.0,"shopping": 11.7,"beach": 6.3,"recovery": 3.9,"mindfulness": 0.0,"surfing": 4.6},
+  {"m": "2026-04","office": 218.5,"home": 958.8,"commute": 46.4,"social": 48.0,"transport": 33.1,"gym": 59.6,"walking": 111.7,"sleep_lc": 420.7,"yoga": 0.0,"shopping": 2.0,"beach": 2.5,"recovery": 2.5,"mindfulness": 0.0,"surfing": 7.1},
+  {"m": "2026-05","office": 188.3,"home": 963.4,"commute": 57.9,"social": 31.2,"transport": 36.7,"gym": 66.9,"walking": 70.5,"sleep_lc": 441.5,"yoga": 0.0,"shopping": 3.6,"beach": 4.5,"recovery": 0.3,"mindfulness": 0.0,"surfing": 4.0},
+  {"m": "2026-06","office": 235.55,"home": 945.81,"commute": 45.68,"social": 29.39,"transport": 72.68,"gym": 73.70,"walking": 59.03,"sleep_lc": 387.51,"yoga": 0.0,"shopping": 7.43,"beach": 0.0,"recovery": 0.0,"mindfulness": 0.0,"surfing": 1.03,"cycling": 1.05}
   ];
 
 /* ---------- configuration ---------- */
@@ -1967,9 +925,10 @@ var METRICS = [
   ,{key:'breath_dist', label:'Breath disturb.',  unit:'ev/h', dir:'low', dp:1, color:'#d46fa0'}
 ];
 var LC_COLORS = {office:'#6aa5c8', home:'#2c3e5e', commute:'#6b7c98', social:'#b58ce0',
-  transport:'#4a5f82', gym:'#e8a33d', walking:'#6fae6a', sleep:'#22304d', shopping:'#8d9bb5',
-  beach:'#d4c08a', recovery:'#5fa8a0', mindfulness:'#9ad0c8', surfing:'#58b4d8'};
-var TYPE_COLORS = {'Walking':'#6fae6a','Strength':'#6aa5c8','Circuit Training':'#e8a33d','Core':'#b58ce0','Surfing':'#58b4d8'};
+  transport:'#4a5f82', activity:'#e8a33d', sleep:'#22304d', shopping:'#8d9bb5',
+  beach:'#d4c08a', recovery:'#5fa8a0', mindfulness:'#9ad0c8'};
+var ACTIVITY_KEYS = ['gym','walking','surfing','cycling','running','sports','swimming'];
+var TYPE_COLORS = {'Walking':'#6fae6a','Strength':'#6aa5c8','Circuit Training':'#e8a33d','Core':'#b58ce0','Surfing':'#58b4d8','Cycling':'#9ad0c8','Elliptical':'#c9a66b'};
 var DAY_MS = 86400000;
 var deviations = {};
 var comp = [];
@@ -2007,6 +966,12 @@ function mean(a){
 function metricByKey(key){
   for (var i = 0; i < METRICS.length; i++) if (METRICS[i].key === key) return METRICS[i];
   return null;
+}
+function activityMinutes(lc){
+  if (!lc) return 0;
+  var sum = 0, i;
+  for (i = 0; i < ACTIVITY_KEYS.length; i++) sum += lc[ACTIVITY_KEYS[i]] || 0;
+  return sum;
 }
 
 /* ---------- deviation engine ---------- */
@@ -2152,13 +1117,13 @@ function heroState(){
   return {id: 'clear', last: last.c};
 }
 function headlineFor(st){
-  if (st.id === 'dip')        return 'An episode is open — <em>watching the dip.</em>';
-  if (st.id === 'recovering') return 'Coming back — <em>the signals are recovering.</em>';
-  if (st.id === 'recovered')  return 'Disrupted and recovered — <em>the signals came back.</em>';
-  if (st.id === 'soft')       return 'Drifting below baseline — <em>not yet an episode.</em>';
-  if (st.id === 'strong')     return 'Running <em>above your own baseline.</em>';
-  if (st.id === 'clear')      return 'Steady — <em>tracking your own baseline.</em>';
-  return 'Building <em>your baseline.</em>';
+  if (st.id === 'dip')        return 'Off the pace — <em>an episode is open.</em>';
+  if (st.id === 'recovering') return 'Returning to form — <em>the signals are recovering.</em>';
+  if (st.id === 'recovered')  return 'Back in the squad — <em>disrupted and recovered.</em>';
+  if (st.id === 'soft')       return 'Drifting below match fitness — <em>not yet an episode.</em>';
+  if (st.id === 'strong')     return 'Champion form — <em>above your own baseline.</em>';
+  if (st.id === 'clear')      return 'Match fit — <em>tracking your own baseline.</em>';
+  return 'Pre-season — <em>building your baseline.</em>';
 }
 function flaggedToday(){
   var out = [], i, l;
@@ -2542,15 +1507,19 @@ function renderInspector(){
 
   var lc = lcFor(selectedDate), bar = '', leg = '';
   if (lc){
-    var tot = 0, cats = [];
-    for (var k in LC_COLORS){
-      if (lc[k] !== null && lc[k] !== undefined && lc[k] > 0){ cats.push({k: k, v: lc[k]}); tot += lc[k]; }
+    var tot = 0, cats = [], actMin = activityMinutes(lc);
+    var nonActivity = ['office','home','commute','social','transport','sleep','shopping','beach','recovery','mindfulness'];
+    for (i = 0; i < nonActivity.length; i++){
+      var kk = nonActivity[i];
+      if (lc[kk] !== null && lc[kk] !== undefined && lc[kk] > 0){ cats.push({k: kk, v: lc[kk]}); tot += lc[kk]; }
     }
+    if (actMin > 0){ cats.push({k: 'activity', v: actMin}); tot += actMin; }
     cats.sort(function(a, b){ return b.v - a.v; });
     for (i = 0; i < cats.length; i++){
       var pct = (cats[i].v / tot * 100).toFixed(2);
-      bar += '<div style="width:' + pct + '%;background:' + LC_COLORS[cats[i].k] + '" title="' + cats[i].k + ' ' + fmtMin(cats[i].v) + '"></div>';
-      leg += '<span><i style="background:' + LC_COLORS[cats[i].k] + '"></i>' + cats[i].k + ' ' + fmtMin(cats[i].v) + '</span>';
+      var lbl = cats[i].k === 'activity' ? 'Activity (gym/walk/surf/cycle)' : cats[i].k;
+      bar += '<div style="width:' + pct + '%;background:' + LC_COLORS[cats[i].k] + '" title="' + lbl + ' ' + fmtMin(cats[i].v) + '"></div>';
+      leg += '<span><i style="background:' + LC_COLORS[cats[i].k] + '"></i>' + lbl + ' ' + fmtMin(cats[i].v) + '</span>';
     }
   } else {
     bar = '<div style="width:100%;background:#1a2740"></div>';
@@ -2700,6 +1669,15 @@ function buildFindings(){
     notes.push({tag: 'pattern', big: '±' + Math.round(sd2 * 60) + ' min', txt: 'night-to-night sleep variability (1σ) around a mean of <b>' +
       mu2.toFixed(1) + ' h</b>. Consistency is the named HRV lever.'});
   }
+
+  var cySessions = 0, cyMin = 0;
+  for (i = 0; i < workoutSessions.length; i++){
+    if (workoutSessions[i].type === 'Cycling'){ cySessions++; cyMin += workoutSessions[i].dur; }
+  }
+  if (cySessions){
+    notes.push({tag: 'pattern', big: cySessions + ' rides', txt: 'logged as Cycling since the 28 Jun pattern change — ' +
+      cyMin + ' minutes now counted toward cardio volume rather than excluded as commute.'});
+  }
   return notes;
 }
 function renderFindings(){
@@ -2725,7 +1703,8 @@ function weeklyZones(){
   var byWk = {}, order = [], i, k;
   for (i = 0; i < daily.length; i++){
     k = weekStart(daily[i].date);
-    if (!byWk[k]){ byWk[k] = {label: shortDate(k), z1: 0, z2: 0, z3: 0, z4: 0, z5: 0}; order.push(k); }
+    if (!byWk[k]){ byWk[k] = {label: shortDate(k), start: k, end: daily[i].date, z1: 0, z2: 0, z3: 0, z4: 0, z5: 0}; order.push(k); }
+    byWk[k].end = daily[i].date;
     byWk[k].z1 += daily[i].z1 || 0;
     byWk[k].z2 += daily[i].z2 || 0;
     byWk[k].z3 += daily[i].z3 || 0;
@@ -2739,7 +1718,8 @@ function weeklyZones(){
 function renderTraining(){
   var wk = weeklyZones(), i, labs = [], z = {z1: [], z2: [], z3: [], z4: [], z5: []};
   for (i = 0; i < wk.length; i++){
-    labs.push('w/c ' + wk[i].label);
+    var rangeLab = wk[i].start === wk[i].end ? shortDate(wk[i].start) : shortDate(wk[i].start) + '\u2013' + shortDate(wk[i].end);
+    labs.push('w/c ' + rangeLab);
     z.z1.push(Math.round(wk[i].z1)); z.z2.push(Math.round(wk[i].z2)); z.z3.push(Math.round(wk[i].z3));
     z.z4.push(Math.round(wk[i].z4)); z.z5.push(Math.round(wk[i].z5));
   }
@@ -2782,16 +1762,19 @@ function renderTraining(){
                y: {ticks: {color: '#aab8cf', font: {size: 11}}, grid: {display: false}}}}
   });
 
-  document.getElementById('trainMeta').innerHTML = workoutSessions.length + ' sessions · ' + fmtMin(totMin) + ' total';
+  document.getElementById('trainMeta').innerHTML = workoutSessions.length + ' sessions · ' + fmtMin(totMin) + ' total · data to ' + shortDate(daily[daily.length - 1].date);
   var hv = null;
   for (i = 0; i < wk.length; i++){
     var hard = wk[i].z3 + wk[i].z4 + wk[i].z5;
-    if (hv === null || hard > hv.v) hv = {label: wk[i].label, v: hard};
+    if (hv === null || hard > hv.v) hv = {start: wk[i].start, end: wk[i].end, v: hard};
   }
+  var hvLab = hv.start === hv.end ? shortDate(hv.start) : shortDate(hv.start) + '\u2013' + shortDate(hv.end);
   var lastWk = wk[wk.length - 1], lastHard = Math.round(lastWk.z3 + lastWk.z4 + lastWk.z5);
-  document.getElementById('trainNote').innerHTML = 'The heaviest cardio week was <b>w/c ' + hv.label + '</b> at <b>' +
-    Math.round(hv.v) + ' Zone-3+ minutes</b>; the current week sits at <b>' + lastHard +
-    '</b>. Zone exposure here includes all recorded activity, not just gym sessions.';
+  var lastLab = lastWk.start === lastWk.end ? shortDate(lastWk.start) : shortDate(lastWk.start) + '\u2013' + shortDate(lastWk.end);
+  document.getElementById('trainNote').innerHTML = 'The heaviest cardio week was <b>w/c ' + hvLab + '</b> at <b>' +
+    Math.round(hv.v) + ' Zone-3+ minutes</b>; the current week (<b>w/c ' + lastLab + '</b>) sits at <b>' + lastHard +
+    '</b>. Zone exposure here includes all recorded activity, not just gym sessions. From 28 Jun, Cycling sessions are ' +
+    'included in this volume (pattern change) rather than excluded as commute.';
 }
 
 /* ---------- sleep architecture ---------- */
@@ -2834,25 +1817,36 @@ function renderSleep(){
 
 /* ---------- this week vs baseline ---------- */
 function renderWeek(){
-  var n = dailyLC.length, i, k;
+  var n = dailyLC.length, i;
   var last7 = dailyLC.slice(Math.max(0, n - 7));
   var prior = dailyLC.slice(0, Math.max(0, n - 7));
-  var inputs = [{k: 'gym', label: 'Gym'}, {k: 'office', label: 'Office'}, {k: 'social', label: 'Social'},
-                {k: 'walking', label: 'Walking'}, {k: 'surfing', label: 'Surf'}];
   var html = '';
+  var actCv = mean(last7.map(function(d){ return activityMinutes(d); }));
+  var actPv = prior.length ? mean(prior.map(function(d){ return activityMinutes(d); })) : null;
+  if ((actCv !== null && actCv >= 1) || (actPv !== null && actPv >= 1)){
+    var actDelta;
+    if (actPv !== null && actPv >= 1){
+      var actPct = Math.round((actCv / actPv - 1) * 100);
+      actDelta = fmtMin(actCv) + '/d · ' + (actPct >= 0 ? '+' : '−') + Math.abs(actPct) + '% vs prior';
+    } else {
+      actDelta = fmtMin(actCv) + '/d · new this week';
+    }
+    html += '<div class="wk-row"><span class="wl">Activity (gym/walk/surf/cycle)</span><span class="wv">' + actDelta + '</span></div>';
+  }
+  var inputs = [{k: 'office', label: 'Office'}, {k: 'social', label: 'Social'}];
   for (i = 0; i < inputs.length; i++){
-    k = inputs[i].k;
+    var k = inputs[i].k;
     var cv = mean(last7.map(function(d){ return d[k] || 0; }));
     var pv = prior.length ? mean(prior.map(function(d){ return d[k] || 0; })) : null;
     if ((cv === null || cv < 1) && (pv === null || pv < 1)) continue;
-    var deltaTxt, cls = 'wv';
+    var deltaTxt;
     if (pv !== null && pv >= 1){
       var pct = Math.round((cv / pv - 1) * 100);
       deltaTxt = fmtMin(cv) + '/d · ' + (pct >= 0 ? '+' : '−') + Math.abs(pct) + '% vs prior';
     } else {
       deltaTxt = fmtMin(cv) + '/d · new this week';
     }
-    html += '<div class="wk-row"><span class="wl">' + inputs[i].label + '</span><span class="' + cls + '">' + deltaTxt + '</span></div>';
+    html += '<div class="wk-row"><span class="wl">' + inputs[i].label + '</span><span class="wv">' + deltaTxt + '</span></div>';
   }
   var sl7 = [], slp = [];
   for (i = 0; i < daily.length; i++){
@@ -3027,7 +2021,7 @@ function runValidation(){
            sparkOk + '/' + METRICS.length + ' board metrics · ' + must.length + ' section charts<br>';
   }
   for (i = 0; i < warns.length; i++) out += '<span class="warn">note:</span> ' + warns[i] + '<br>';
-  out += 'Health Atlas v2 · deviation architecture · data to ' + shortDate(daily[daily.length - 1].date) +
+  out += 'Health Atlas v2 · Les Bleus edition · deviation architecture · data to ' + shortDate(daily[daily.length - 1].date) +
          ' 2026 · baselines: trailing 28-day (min 14) · episodes: composite ≤ −1σ ×2d opens, ≥ −0.25σ ×2d resolves · ' +
          'relationships read at monthly aggregate only';
   document.getElementById('footCheck').innerHTML = out;
