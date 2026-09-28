@@ -833,8 +833,8 @@ function renderCover(){
   }
   document.getElementById('scoreVerdict').innerHTML = verdict;
 
-  /* cover headline from composite state */
-  var st = comp.length ? comp[comp.length - 1].c : null;
+  /* cover headline from composite state -- trailing 7-day mean, not a single day */
+  var st = weeklyComposite();
   var ep = episodes.length ? episodes[episodes.length - 1] : null;
   var openEp = ep && ep.end === null;
   var head, sub;
@@ -859,6 +859,20 @@ function renderCover(){
   }
   document.getElementById('coverHead').innerHTML = head;
   document.getElementById('coverSub').innerHTML = sub;
+}
+
+/* the composite trajectory (comp[]) is a per-day z-score average. Any
+   narrative that explicitly says "this week" must read a trailing 7-day
+   mean of it, not the single latest day -- a single unusually good or bad
+   night was previously enough to flip the whole week's headline, which
+   produced narratives that contradicted the actual run of days (caught
+   Sep 2026: six negative days plus one strong night read as "a week spent
+   above your own line"). */
+function weeklyComposite(){
+  if (!comp.length) return null;
+  var win = comp.slice(Math.max(0, comp.length - 7));
+  var s = 0, i; for (i = 0; i < win.length; i++) s += win[i].c;
+  return s / win.length;
 }
 
 /* ---------- weekly feature: this week vs trajectory ---------- */
@@ -979,7 +993,7 @@ function renderFeature(){
 
   var p = [];
   var opener;
-  var st = comp.length ? comp[comp.length - 1].c : null;
+  var st = weeklyComposite();
   if (st === null) opener = 'The record is young, so this week reads without a trajectory to lean on yet.';
   else if (st <= -0.6) opener = 'This was a week spent below your own line \u2014 not alarmingly, but consistently.';
   else if (st >= 0.6) opener = 'This was a week spent above your own line, which is worth noticing as much as any dip.';
