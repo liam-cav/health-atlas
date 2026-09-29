@@ -947,8 +947,14 @@ function renderRibbon(){
     if (!b) continue;
     var segs = rleSegs(rasterize(b, 5), 5);
     for (j = 0; j < segs.length; j++) used[segs[j].k] = 1;
+    /* Apple dates a sleep record by wake-morning, so the record filed under date+1
+       is the one whose bedtime clock-time actually falls inside THIS row (confirmed
+       against sleepStart Sep 2026: row D's dominant late segment starts ~22:30-23:00,
+       matching date D+1's sleepStart almost exactly, not date D's own). HRV/RHR are
+       same-calendar-day readings and are not shifted. */
+    var sleepOwner = dayOf(isoPlus(W[i], 1));
     rows += rbRow(dayName(W[i]).slice(0, 3), shortDate(W[i]), segs,
-      rbChip('sleep', d ? d.sleep : null, zAt('sleep', W[i]), true, 1) + rbChip('HRV', d ? d.hrv : null, zAt('hrv', W[i]), true, 0) +
+      rbChip('sleep', sleepOwner ? sleepOwner.sleep : null, zAt('sleep', isoPlus(W[i], 1)), true, 1) + rbChip('HRV', d ? d.hrv : null, zAt('hrv', W[i]), true, 0) +
       rbChip('RHR', d ? d.rhr : null, zAt('rhr', W[i]), false, 0), false);
   }
   /* reference rows: modal activity per 15-minute slot across the 28 days before this week.
@@ -967,7 +973,9 @@ function renderRibbon(){
     var isWeekend = [0, 6].indexOf(new Date(dt + 'T00:00:00').getDay()) >= 0;
     var g = isWeekend ? 'weekend' : (minsIn(bb, 'office') >= 120 ? 'office' : 'wfh'), dd = dayOf(dt);
     groups[g].push(rasterize(bb, 15));
-    if (dd){ if (dd.sleep !== null) stats[g].s.push(dd.sleep); if (dd.hrv !== null) stats[g].h.push(dd.hrv); if (dd.rhr !== null) stats[g].r.push(dd.rhr); }
+    var slOwner = dayOf(isoPlus(dt, 1));
+    if (slOwner && slOwner.sleep !== null) stats[g].s.push(slOwner.sleep);
+    if (dd){ if (dd.hrv !== null) stats[g].h.push(dd.hrv); if (dd.rhr !== null) stats[g].r.push(dd.rhr); }
   }
   var ref = '', names = {office: 'Usual office day', wfh: 'Usual WFH weekday', weekend: 'Usual weekend day'};
   for (var gi = 0; gi < GROUP_ORDER.length; gi++){
