@@ -194,7 +194,7 @@ details p,details li{color:var(--ink2);max-width:80ch}
     <div><h2 style="margin-top:12px">Month by month</h2><p class="lede" id="mLede"></p><div class="card"><div class="ch" id="mChart"></div></div></div>
     <div><h2 style="margin-top:12px">Last 7 days against the 28 before</h2><p class="lede">Same comparison as the cards above. Moves smaller than half a daily standard deviation are marked flat.</p><div class="card" id="moved"></div></div>
   </div>
-  <h2>What moves your next-morning HRV</h2>
+  <h2 id="corH">What moves your next-morning HRV</h2>
   <p class="lede" id="corLede"></p>
   <div class="card" id="cors"></div>
 </section>
@@ -544,19 +544,23 @@ function renderTrends(){
   h='';for(q=0;q<rows.length;q++){h+='<div class="row"><span>'+rows[q].l+'</span><span class="'+rows[q].st+'">'+sg(rows[q].d,rows[q].dp)+' '+rows[q].u+' '+(rows[q].st==='up'?'in your favour':(rows[q].st==='dn'?'against you':'flat'))+'</span></div>';}
   $('moved').innerHTML=h||'<span class="muted">Not enough data.</span>';
   /* correlations */
+  var OUTL={hrv:'next-morning HRV',rhr:'next-morning resting HR',vo2:'VO2 estimate',dc:'next-morning HR braking',slp:'sleep that night',stp:'daily steps',tmp:'overnight wrist temperature'},ZS={hrv:[hrvLn,0.08],rhr:[rhr,1.5],vo2:[vo2,0.3],dc:[dcv,0.4],slp:[slp,0.5],stp:[stp,1500],tmp:[tmp,0.1]},zo=[],zj,mdir=metricByKey(tK).dir;
+  for(zj=0;zj<N;zj++){zo.push(zAt(ZS[tK][0],zj,ZS[tK][1]));}
+  $('corH').textContent='What moves your '+OUTL[tK];
   var DR=[{k:'Sleep that night',lag:0,get:function(x){return slp[x];}},{k:'Prior-day load',lag:1,get:function(x){return load[x];}},{k:'Prior-day zone 3 to 5 min',lag:1,get:function(x){return zhi[x];}},{k:'Prior-day steps',lag:1,get:function(x){return stp[x];}},{k:'Prior-day social time',lag:1,get:function(x){return lcVal(x,'social');}},{k:'Prior-day time at office',lag:1,get:function(x){return lcVal(x,'office');}}],res=[],p2;
-  for(q=0;q<DR.length;q++){var xs=[],ys=[];for(p2=DR[q].lag;p2<N;p2++){var xv=DR[q].get(p2-DR[q].lag);if(isNum(xv)&&isNum(hz[p2])){xs.push(xv);ys.push(hz[p2]);}}
-    if(xs.length>=30){var rr=pearson(xs,ys);if(rr!==null){res.push({k:DR[q].k,r:rr,n:xs.length,th:2/Math.sqrt(xs.length),th2:2.64/Math.sqrt(xs.length)});}}}
+  for(q=0;q<DR.length;q++){if((tK==='slp'&&DR[q].k==='Sleep that night')||(tK==='stp'&&DR[q].k==='Prior-day steps')){continue;}var xs=[],ys=[];for(p2=DR[q].lag;p2<N;p2++){var xv=DR[q].get(p2-DR[q].lag);if(isNum(xv)&&isNum(zo[p2])){xs.push(xv);ys.push(zo[p2]);}}
+    if(xs.length>=30){var rr=pearson(xs,ys);if(rr!==null){res.push({k:DR[q].k,r:rr,n:xs.length,th:2/Math.sqrt(xs.length)});}}}
   res.sort(function(a,b){return Math.abs(b.r)-Math.abs(a.r);});
+  var BZ={1:1.96,2:2.24,3:2.39,4:2.5,5:2.58,6:2.64},bzv=BZ[res.length]||2.64;for(q=0;q<res.length;q++){res[q].th2=bzv/Math.sqrt(res[q].n);}
   h='';for(q=0;q<res.length;q++){var e=res[q],w=Math.min(50,Math.abs(e.r)/0.5*50),lf=e.r>=0?50:50-w,sig=Math.abs(e.r)>=e.th;
-    h+='<div class="cor"><div>'+e.k+'</div><div class="bar"><b></b><i style="left:'+lf+'%;width:'+w+'%;background:'+(sig?(e.r>=0?'var(--hi)':'var(--alert)'):'var(--muted)')+';opacity:'+(sig?1:0.55)+'"></i><u style="left:'+(50+e.th/0.5*50)+'%"></u><u style="left:'+(50-e.th/0.5*50)+'%"></u></div><div>'+sg(e.r,2)+'</div></div>';}
+    h+='<div class="cor"><div>'+e.k+'</div><div class="bar"><b></b><i style="left:'+lf+'%;width:'+w+'%;background:'+(sig?(mdir===0?'var(--ink2)':((e.r*mdir>0)?'var(--hi)':'var(--alert)')):'var(--muted)')+';opacity:'+(sig?1:0.55)+'"></i><u style="left:'+(50+e.th/0.5*50)+'%"></u><u style="left:'+(50-e.th/0.5*50)+'%"></u></div><div>'+sg(e.r,2)+'</div></div>';}
   $('cors').innerHTML=h||'<span class="muted">Not enough paired days yet.</span>';
   var sigs=[];for(q=0;q<res.length;q++){if(Math.abs(res[q].r)>=res[q].th){sigs.push(res[q]);}}
   var nmin=1e9,nmax=0;for(q=0;q<res.length;q++){nmin=Math.min(nmin,res[q].n);nmax=Math.max(nmax,res[q].n);}
   var nTxt=res.length?(nmin===nmax?nmin+' days':nmin+' to '+nmax+' days'):'';
   var strong=[];for(q=0;q<sigs.length;q++){if(Math.abs(sigs[q].r)>=sigs[q].th2){strong.push(sigs[q]);}}
   function lst(a){return a.map(function(s){return s.k.toLowerCase()+' ('+sg(s.r,2)+')';}).join(', ');}
-  $('corLede').textContent=!res.length?'Not enough paired days yet.':('Correlation of each factor with the next-morning HRV z-score, over '+nTxt+'. Thin lines mark the 95% chance level for a single test. '+(!sigs.length?'None clears it, so no single factor stands out yet.':(strong.length?strong.length+' of '+res.length+' clear the stricter level that allows for testing '+res.length+' factors at once: '+lst(strong)+'.':sigs.length+' of '+res.length+' clear the single-test level but not the stricter one that allows for testing '+res.length+' factors at once: '+lst(sigs)+'. Treat '+(sigs.length===1?'it':'them')+' as a lead to watch, not a finding.'))+' Correlation does not prove cause.');
+  $('corLede').textContent=!res.length?'Not enough paired days yet.':('Correlation of each factor with '+OUTL[tK]+', measured as its distance from your own 28-day norm, over '+nTxt+'. Thin lines mark the 95% chance level for a single test. '+(!sigs.length?'None clears it, so no single factor stands out yet.':(strong.length?strong.length+' of '+res.length+' clear the stricter level that allows for testing '+res.length+' factors at once: '+lst(strong)+'.':sigs.length+' of '+res.length+' clear the single-test level but not the stricter one that allows for testing '+res.length+' factors at once: '+lst(sigs)+'. Treat '+(sigs.length===1?'it':'them')+' as a lead to watch, not a finding.'))+' '+(sigs.length&&mdir!==0?'Blue bars move it in your favour and red against. ':'')+(tK==='vo2'?'VO2 updates only after qualifying walks, so fewer days pair up. ':'')+'Correlation does not prove cause.');
 }
 
 /* ================= SLEEP ================= */
